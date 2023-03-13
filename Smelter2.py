@@ -101,7 +101,19 @@ class LocalSearch():
                 return self.grade_value[q]
         return 0.0
 
-    def view_soln(self, x) -> None:
+    def calc_crucible_value_with_spread(self, crucible_quality, spread, max_spread) -> float: 
+        """Return the $ value of a crucible with the given Al (aluminium), Fe (iron) & Si (silicon) percentages.
+           Returns 0 if the aluminium does not satisfy any of the quality grades."""
+        tol = 0.00001 # We allow for small errors in 5th decimal point
+        spread_penalty = -100000 if spread > max_spread else 0
+        for q in reversed(range(self.no_grades)): 
+            if crucible_quality[Element.Al] >= self.grade_min_Al[q]-tol and \
+               crucible_quality[Element.Fe] <= self.grade_max_Fe[q] + tol and \
+               crucible_quality[Element.Si] <= self.grade_max_Si[q] + tol:
+                return self.grade_value[q] + spread_penalty
+        return 0.0
+
+    def view_soln(self, x, max_allowed_spread=0) -> None:
         """Print solution x with its statistics. Note that our output numbers items from 1, not 0"""
         max_spread = 0
         crucible_value_sum = 0
@@ -109,7 +121,11 @@ class LocalSearch():
             spread = max(x[c]) - min(x[c])
             max_spread = max(max_spread, spread)
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-            crucible_value = self.calc_crucible_value ( crucible_quality )
+            if max_allowed_spread:
+                crucible_value = self.calc_crucible_value_with_spread(crucible_quality, spread, max_allowed_spread)
+            else:
+                crucible_value = self.calc_crucible_value(crucible_quality)
+
             crucible_value_sum += crucible_value
             print(f'{c+1:>2} [{x[c][0]+1:>2} {x[c][1]+1:>2} {x[c][2]+1:>2} ] '
                   f'{crucible_quality[Element.Al]:>5.3f} %Al, '
@@ -118,12 +134,15 @@ class LocalSearch():
                   f'${crucible_value:>5.2f}, spread = {spread:>2}' )
         print(f'                                          Sum = ${round(crucible_value_sum,2):>6}, MxSprd = {max_spread:>2}') 
 
-    def calc_obj(self, x):
+    def calc_obj(self, x, max_allowed_spread=0):
         """Calculate the total profit for a given solution"""
         crucible_value_sum = 0
         for c in range (self.no_crucibles): 
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-            crucible_value = self.calc_crucible_value ( crucible_quality ) ; 
+            if max_allowed_spread:
+                crucible_value = self.calc_crucible_value_with_spread(crucible_quality, np.ptp(x[c]), max_allowed_spread)
+            else:
+                crucible_value = self.calc_crucible_value ( crucible_quality ) ; 
             crucible_value_sum += crucible_value
         return crucible_value_sum
 
@@ -138,12 +157,12 @@ class LocalSearch():
         rng.shuffle(x)
         return x.reshape(self.no_crucibles, self.pots_per_crucible)
 
-    def next_ascent(self):
+    def next_ascent(self, max_spread=100):
         x = self.random_solution()
         last_crucible_values = np.zeros(self.no_crucibles)
         for c in range(self.no_crucibles):
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-            last_crucible_values[c] = self.calc_crucible_value(crucible_quality)
+            last_crucible_values[c] = self.calc_crucible_value_with_spread(crucible_quality, np.ptp(x[c]), max_spread)
 
         while True:
             last_optimal_indices = (-1, -1, -1, -1)
@@ -158,9 +177,9 @@ class LocalSearch():
                             crucible_k[m] = x[l][n]
                             crucible_l[n] = x[k][m]
                             crucible_k_quality = [ (sum( self.pot_quality[crucible_k[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-                            crucible_k_value = self.calc_crucible_value(crucible_k_quality)
+                            crucible_k_value = self.calc_crucible_value_with_spread(crucible_k_quality, np.ptp(crucible_k), max_spread)
                             crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-                            crucible_l_value = self.calc_crucible_value(crucible_l_quality)
+                            crucible_l_value = self.calc_crucible_value_with_spread(crucible_l_quality, np.ptp(crucible_l), max_spread)
                             delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
                             if delta > 0.01:
                                 last_optimal_indices = (k, m, l, n)
@@ -287,7 +306,7 @@ if __name__ == "__main__":
     # Generate data for a plot showing many random solutions along with the best solution found so far
     obj_fn_values = []
     best_obj_fn_values = []
-    zbest = 0
+    zbest = -10000000
     # We start with the 'trivial' solution as the 0'th entry in our plot data
     x = ls.trivial_solution()
     z = ls.calc_obj(x)
@@ -296,15 +315,18 @@ if __name__ == "__main__":
     best_obj_fn_values.append(zbest)
 
     # Add 1000 random solutions
-    start = time.time()
     for i in range(100):
-        x = ls.next_ascent()
-        z = ls.calc_obj(x)
+        if i%10 == 0:
+            print(i)
+            print(zbest)
+        x = ls.next_ascent(max_spread=8)
+        z = ls.calc_obj(x, max_allowed_spread=8)
+        if z > zbest:
+            xbest = x
         zbest = max(z,zbest)
         obj_fn_values.append(z)
         best_obj_fn_values.append(zbest)
-    print(max(best_obj_fn_values))
-    print(int((time.time() - start)*100))
+    ls.view_soln(xbest, max_allowed_spread=8)
     # Generate the actual plot
     plt.plot(obj_fn_values,'r')
     plt.plot(best_obj_fn_values,'b')
