@@ -28,47 +28,10 @@ y_{2, 1}y_{2, 2}y_{2, 3};...y_{c, j}),y_{c,j}=
 \end{cases}$$
 
 \section{Question 2}
-The intermediate values for each crucible is the value of that crucible
-from the starting configuration. If a pot is swapped from that crucible
-then the intermediate value is updated to be the new value of that
-crucible.
-
 \begin{verbatim}
-# Using 1 indexing to match with mathematical definitions
-
-def sweep(&x, &last_crucible_values):
-# array of crucible values, should be calculated at start before 
-# first sweep
-last_crucible_values[17] 
-x[17][3] # initial configuration
-  while True 
-    last_optimal_indexs = (-1, -1, -1, -1)
-    for k=1:16
-      for m=1:3
-        for l=k+1:17
-          for n=1:3
-            if (k, m, l, n) == last_optimal_indexs:
-              return
-            crucible_k = x[k] 
-            crucible_l = x[l] 
-            swap_k = crucible_k[m]
-            swap_l = crucible_l[n]
-            crucible_k[m] = swap_l
-            crucible_l[n] = swap_k
-            crucible_k_value = g(crucible_k)
-            crucible_l_value = g(crucible_l)
-            delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - 
-                    last_crucible_values[l]
-            if delta > 0:
-              last_crucible_values[k] = crucible_k_value
-              last_crucible_values[l] = crucible_l_value
-              x[k][m] = swap_l
-              x[l][n] = swap_k
-              last_optimal_indexs = (k, m, l, n)
-    if last_optimal_index == (-1, -1, -1, -1)
-      return
-          
 \end{verbatim}
+
+\section{Quesion 3}
 
 
 \end{document}
