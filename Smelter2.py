@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from enum import IntEnum
 import time
+import random
 
 class Element(IntEnum):
     """The elements that we measure levels of in the Aluminium we produce"""
@@ -157,7 +158,7 @@ class LocalSearch():
         rng.shuffle(x)
         return x.reshape(self.no_crucibles, self.pots_per_crucible)
 
-    def next_ascent(self, max_spread=100):
+    def next_ascent_spread(self, max_spread):
         x = self.random_solution()
         last_crucible_values = np.zeros(self.no_crucibles)
         for c in range(self.no_crucibles):
@@ -166,7 +167,7 @@ class LocalSearch():
 
         while True:
             last_optimal_indices = (-1, -1, -1, -1)
-            for k in range(self.no_crucibles):
+            for k in range(self.no_crucibles-1):
                 for m in range(self.pots_per_crucible):
                     for l in range(k+1, self.no_crucibles):
                         for n in range(self.pots_per_crucible):
@@ -190,6 +191,39 @@ class LocalSearch():
             if last_optimal_indices == (-1, -1, -1, -1):
                 return x
 
+    def next_ascent(self):
+        x = self.random_solution()
+        last_crucible_values = np.zeros(self.no_crucibles)
+        for c in range(self.no_crucibles):
+            crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+            last_crucible_values[c] = self.calc_crucible_value(crucible_quality)
+
+        while True:
+            last_optimal_indices = (-1, -1, -1, -1)
+            for k in range(self.no_crucibles-1):
+                for m in range(self.pots_per_crucible):
+                    for l in range(k+1, self.no_crucibles):
+                        for n in range(self.pots_per_crucible):
+                            if (k, m, l, n) == last_optimal_indices:
+                                return x
+                            crucible_k = x[k].copy()
+                            crucible_l = x[l].copy()
+                            crucible_k[m] = x[l][n]
+                            crucible_l[n] = x[k][m]
+                            crucible_k_quality = [ (sum( self.pot_quality[crucible_k[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+                            crucible_k_value = self.calc_crucible_value(crucible_k_quality)
+                            crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+                            crucible_l_value = self.calc_crucible_value(crucible_l_quality)
+                            delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
+                            if delta > 0.01:
+                                last_optimal_indices = (k, m, l, n)
+                                last_crucible_values[k] = crucible_k_value
+                                last_crucible_values[l] = crucible_l_value
+                                x[k][m] = crucible_k[m]
+                                x[l][n] = crucible_l[n]
+            if last_optimal_indices == (-1, -1, -1, -1):
+                return x
+
     def steepest_ascent(self):
         x = self.random_solution()
         last_crucible_values = np.zeros(self.no_crucibles)
@@ -200,7 +234,7 @@ class LocalSearch():
         while True:
             optimal_swap = (-1, -1, -1, -1)
             best_delta = 0.01
-            for k in range(self.no_crucibles):
+            for k in range(self.no_crucibles-1):
                 for m in range(self.pots_per_crucible):
                     for l in range(k+1, self.no_crucibles):
                         for n in range(self.pots_per_crucible):
@@ -233,51 +267,56 @@ class LocalSearch():
             x[k][m] = crucible_k[m]
             x[l][n] = crucible_l[n]
 
-
-    def next_ascent_rapid(self):
+    def simulated_annealing(self, c1, alpha):
         x = self.random_solution()
-        checked = np.zeros(self.no_crucibles)
+        ck = c1 
+        iterations = 0
         last_crucible_values = np.zeros(self.no_crucibles)
         for c in range(self.no_crucibles):
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
             last_crucible_values[c] = self.calc_crucible_value(crucible_quality)
+        accepted = 0
+        while ck>0.00001:
+            k = random.randint(0, self.no_crucibles-1)
+            m = random.randint(0, self.pots_per_crucible-1)
+            l = random.choice([i for i in range(self.no_crucibles) if i != k])
+            n = random.randint(0, self.pots_per_crucible-1)
+            
+            crucible_k = x[k].copy()
+            crucible_l = x[l].copy()
+            crucible_k[m] = x[l][n]
+            crucible_l[n] = x[k][m]
+            crucible_k_quality = [ (sum( self.pot_quality[crucible_k[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+            crucible_k_value = self.calc_crucible_value(crucible_k_quality)
+            crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+            crucible_l_value = self.calc_crucible_value(crucible_l_quality)
+            delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
+            if iterations % 100000 == 0:
+                print("Accepted: ", accepted)
+                print("Ck: ", ck)
+                print("Objective: ", self.calc_obj(x))
+                accepted = 0
+            if delta > 0.01 or random.random() < np.exp(delta/ck):
+                accepted += 1
+                last_optimal_indices = (k, m, l, n)
+                last_crucible_values[k] = crucible_k_value
+                last_crucible_values[l] = crucible_l_value
+                x[k][m] = crucible_k[m]
+                x[l][n] = crucible_l[n]
+            ck = ck*alpha
+            iterations += 1
+        return x
 
-        while True:
-            last_optimal_indices = (-1, -1, -1, -1)
-            for k in range(self.no_crucibles):
-                for m in range(self.pots_per_crucible):
-                    for l in range(k+1, self.no_crucibles):
-                        for n in range(self.pots_per_crucible):
-                            if (k, m, l, n) == last_optimal_indices:
-                                return x
-                            if checked[k] and checked[l]:
-                                continue
-                            if m==3 and n==3:
-                                checked[k] = 1
-                                checked[l] = 1
-                            crucible_k = x[k].copy()
-                            crucible_l = x[l].copy()
-                            crucible_k[m] = x[l][n]
-                            crucible_l[n] = x[k][m]
-                            crucible_k_quality = [ (sum( self.pot_quality[crucible_k[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-                            crucible_k_value = self.calc_crucible_value(crucible_k_quality)
-                            crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-                            crucible_l_value = self.calc_crucible_value(crucible_l_quality)
-                            delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
-                            if delta > 0.01:
-                                checked[k] = 0
-                                checked[l] = 0
-                                last_optimal_indices = (k, m, l, n)
-                                last_crucible_values[k] = crucible_k_value
-                                last_crucible_values[l] = crucible_l_value
-                                x[k][m] = crucible_k[m]
-                                x[l][n] = crucible_l[n]
-            if last_optimal_indices == (-1, -1, -1, -1):
-                return x
 
 if __name__ == "__main__":
     # Create the local search class defining a default problem to be solved
     ls = LocalSearch()
+    ls.load_default_problem()
+    x = ls.simulated_annealing(c1=100, alpha=0.999)
+    ls.view_soln(x)
+
+
+    # Simulated Annealing
 
     # Create and view a simple 'trivial' solution
     # x = ls.trivial_solution()
@@ -301,38 +340,38 @@ if __name__ == "__main__":
 
 
     # Switch back to the default problem
-    ls.load_default_problem()
-
-    # Generate data for a plot showing many random solutions along with the best solution found so far
-    obj_fn_values = []
-    best_obj_fn_values = []
-    zbest = -10000000
-    # We start with the 'trivial' solution as the 0'th entry in our plot data
-    x = ls.trivial_solution()
-    z = ls.calc_obj(x)
-    zbest = max(z,zbest)
-    obj_fn_values.append(z)
-    best_obj_fn_values.append(zbest)
-
-    # Add 1000 random solutions
-    for i in range(100):
-        if i%10 == 0:
-            print(i)
-            print(zbest)
-        x = ls.next_ascent(max_spread=8)
-        z = ls.calc_obj(x, max_allowed_spread=8)
-        if z > zbest:
-            xbest = x
-        zbest = max(z,zbest)
-        obj_fn_values.append(z)
-        best_obj_fn_values.append(zbest)
-    ls.view_soln(xbest, max_allowed_spread=8)
-    # Generate the actual plot
-    plt.plot(obj_fn_values,'r')
-    plt.plot(best_obj_fn_values,'b')
-    plt.xlabel('Function Evaluation Count')
-    plt.ylabel('Objective Function Value')
-    plt.show()
+    # ls.load_default_problem()
+    #
+    # # Generate data for a plot showing many random solutions along with the best solution found so far
+    # obj_fn_values = []
+    # best_obj_fn_values = []
+    # zbest = 0
+    # # We start with the 'trivial' solution as the 0'th entry in our plot data
+    # x = ls.trivial_solution()
+    # z = ls.calc_obj(x)
+    # zbest = max(z,zbest)
+    # obj_fn_values.append(z)
+    # best_obj_fn_values.append(zbest)
+    #
+    # # Add 1000 random solutions
+    # for i in range(100):
+    #     if i%1 == 0:
+    #         print(i)
+    #         print(zbest)
+    #     x = ls.simulated_annealing(c1=100, alpha=0.999)
+    #     z = ls.calc_obj(x)
+    #     if z > zbest:
+    #         xbest = x
+    #     zbest = max(z,zbest)
+    #     obj_fn_values.append(z)
+    #     best_obj_fn_values.append(zbest)
+    # ls.view_soln(xbest)
+    # # Generate the actual plot
+    # plt.plot(obj_fn_values,'r')
+    # plt.plot(best_obj_fn_values,'b')
+    # plt.xlabel('Function Evaluation Count')
+    # plt.ylabel('Objective Function Value')
+    # plt.show()
 
     # # Generate data for a plot showing many random solutions along with the best solution found so far
     # # This differs from the previous plot by having an x-axis of time
