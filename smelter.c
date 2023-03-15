@@ -4,6 +4,7 @@
 #include <math.h>
 
 
+
 double pots[51][3] = 
     {{99.136, 0.051, 0.497},
     {99.733, 0.064, 0.138},
@@ -94,8 +95,54 @@ void print_sol(const int x[17][3]) {
   }
 }
 
+void next_ascent(int x[17][3]){
+  double last_crucible_values[17];
+  for(int i=0;i<17;i++){
+    last_crucible_values[i] = f(x[i]);
+  }
+  int o_k = -1;
+  int o_l = -1;
+  int o_m = -1;
+  int o_n = -1;
+
+  while(1){
+    for(int k=0;k<16;k++){
+      for(int m=0;m<3;m++){
+        for(int l=k+1;l<17;l++){
+          for(int n=0;n<3;n++){
+            if(k==o_k && m==o_m && l==o_l && n==o_n){
+              return;
+            }
+            double swap = x[k][m];
+            x[k][m] = x[l][n];
+            x[l][n] = swap;
+            
+            double f_k = f(x[k]);
+            double f_l = f(x[l]);
+
+            double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
+            if(delta>0.001){
+              last_crucible_values[k] = f_k;
+              last_crucible_values[l] = f_l;
+              o_k = k;
+              o_m = m;
+              o_l = l;
+              o_n = n;
+            }
+            else{
+              x[l][n] = x[k][m];
+              x[k][m] = swap;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 void simulated_annealing(int x[17][3], double c1, double alpha) {
   double ck = c1;
+  double best = 0;
   unsigned long iter = 0;
   unsigned long accepted = 0;
   int delta_over_0 = 0;
@@ -105,8 +152,8 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
   for(int i=0;i<17;i++){
     last_crucible_values[i] = f(x[i]);
   }
-  srand(time(NULL));
-  while(last_accepted>100){
+  srand(rand());
+  while(ck>0.0000000001){
     int k = rand() % 17;
     int l = rand() % 17;
     int m = rand() % 3;
@@ -123,14 +170,14 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
     double f_l = f(x[l]);
 
     double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
-    if(delta>0.00001){
+    if(delta>0.0001){
       delta_over_0+=1;
     } 
     if(iter%10000000 == 0 && iter != 0){
       // printf("%f, %f, %f, %f, %f", f_k, f_l, last_crucible_values[k], last_crucible_values[l], delta);
       // printf("Iterations: %lu\n", iter);
       printf("Accepted: %d\n", accepted); 
-      printf("Ck: %f\n", ck); 
+      printf("Ck: %0.15f\n", ck); 
       printf("Obj: %f\n", calc_obj(x));
       printf("Iter: %lu\n", iter);
       // printf("Delta Over 0: %d\n", delta_over_0);
@@ -139,6 +186,8 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
     }
 
     if(delta>0.001 || (double)rand() / (double)RAND_MAX < exp(delta/ck)){
+      // double obj = calc_obj(x);
+      // best = obj > best ? obj : best; 
       last_crucible_values[k] = f_k;
       last_crucible_values[l] = f_l;
       accepted++;
@@ -151,6 +200,7 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
     ck = ck*alpha;
     iter++; 
   }
+  printf("BEST: %f", best);
 }
 
 void generate_random_x(int x[17][3]) {
@@ -158,7 +208,7 @@ void generate_random_x(int x[17][3]) {
   for(int i=0;i<51;i++){
     x_flat[i] = i;
   }
-  srand(time(NULL));
+  srand(rand());
   for(int i=0;i<51;i++){
     int j = rand() % 51;
     int swap = x_flat[i];
@@ -175,7 +225,21 @@ void generate_random_x(int x[17][3]) {
 }
 
 int main() {
+  srand(time(NULL));
   int x[17][3];
+
+  // double best = 0;
+  // for(int i=0;i<10000000;i++){
+  //   generate_random_x(x);
+  //   next_ascent(x);
+  //   double obj = calc_obj(x);
+  //   best = obj > best ? obj : best;
+  //   if(i%100 == 0) {
+  //     printf("%d, %f\n", i, best);
+  //   }
+  // }
+  // printf("Best: %f\n", best);
+
   generate_random_x(x);
   simulated_annealing(x, 100, 0.99999999);
   print_sol(x);
