@@ -288,7 +288,8 @@ class LocalSearch():
         plt.xlabel('Time (s)')
         plt.ylabel('Objective Function Value')
         plt.legend()
-        plt.show()
+        plt.gcf().set_size_inches(11.69, 8.27) 
+        plt.savefig("assets/repeated_next_ascents_chart.pdf", orientation="landscape")
 
     def steepest_ascent(self, random_start=True, plotting=False):
         if random_start: 
@@ -393,7 +394,7 @@ class LocalSearch():
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
             last_crucible_values[c] = self.calc_crucible_value(crucible_quality)
         accepted = 0
-        while ck>0.00001:
+        while ck>0.001:
             k = random.randint(0, self.no_crucibles-1)
             m = random.randint(0, self.pots_per_crucible-1)
             l = random.choice([i for i in range(self.no_crucibles) if i != k])
@@ -408,14 +409,13 @@ class LocalSearch():
             crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
             crucible_l_value = self.calc_crucible_value(crucible_l_quality)
             delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
-            if iterations % 100000 == 0:
+            if iterations % 1000 == 0:
                 print("Accepted: ", accepted)
                 print("Ck: ", ck)
                 print("Objective: ", self.calc_obj(x))
                 accepted = 0
             if delta > 0.01 or random.random() < np.exp(delta/ck):
                 accepted += 1
-                last_optimal_indices = (k, m, l, n)
                 last_crucible_values[k] = crucible_k_value
                 last_crucible_values[l] = crucible_l_value
                 x[k][m] = crucible_k[m]
@@ -428,8 +428,9 @@ class LocalSearch():
 if __name__ == "__main__":
     # Create the local search class defining a default problem to be solved
     ls = LocalSearch()
-    ls.load_small_problem()
-    ls.steepest_ascent(random_start=False, plotting=True)
+    x = ls.simulated_annealing(c1=10, alpha=0.999)
+
+
     
     # Create and view a simple 'trivial' solution
     # x = ls.trivial_solution()
