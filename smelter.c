@@ -1,7 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdbool.h>
 
 
 
@@ -63,15 +64,48 @@ double grade_max_Fe[11] = {5.00, 0.81, 0.81, 0.79, 0.76, 0.72, 0.53, 0.50, 0.46,
 double grade_max_Si[11] = {3.00, 0.40, 0.41, 0.43, 0.39, 0.35, 0.28, 0.28, 0.21, 0.15, 0.15};
 double grade_value[11] =  {10.00,21.25,26.95,36.25,41.53,44.53,48.71,52.44,57.35,68.21,72.56};
 
-double f(const int *crucible) {
+double f(const int *crucible, const bool mod) {
+  double k = 20;
   double quality[3];
+  double spread[3];
   for(int i=0;i<3;i++){
     quality[i] = (pots[crucible[0]][i] + pots[crucible[1]][i] + pots[crucible[2]][i])/3;
+    double al = pots[crucible[0]][i];
+    double fe = pots[crucible[1]][i];
+    double si = pots[crucible[2]][i];
+    double max = (al > fe) ? ((al > si) ? al : si) : ((fe > si) ? fe : si);
+    double min = (al < fe) ? ((al < si) ? al : si) : ((fe < si) ? fe : si);
+    spread[i] = max - min;
   }
   double tol = 0.00001;
+  double a = 0;
+  double b = 0;
+  double c = 0;
+  int al = -1;
+  int fe = -1;
+  int si = -1;
+  
   for(int i=10;i>=0;i--){
-    if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) {
-      return grade_value[i];
+    if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) { 
+      if(quality[0] >= grade_min_Al[i] - tol && al != -1){
+        al = i;
+      }
+      if(quality[1] <= grade_max_Fe[i] + tol && fe != -1){
+        fe = i;
+      }
+      if(quality[2] <= grade_max_Si[i] + tol && si != -1){
+        si = i;
+      }
+      if(mod){
+           // return grade_value[i] - (2*spread[0] + 2*spread[1] + 2*spread[2]);
+        double max = (al > fe) ? ((al > si) ? al : si) : ((fe > si) ? fe : si);
+        double min = (al < fe) ? ((al < si) ? al : si) : ((fe < si) ? fe : si);
+        return grade_value[i] - 5*(max-min);
+        // return grade_value[i] - k*(quality[0] - grade_min_Al[i]) - k*(grade_max_Fe[i] - quality[1]) - k*(grade_max_Si[i] - quality[2]);
+      }
+      else {
+        return grade_value[i];
+      }
     } 
   }  
   return 0;
@@ -80,7 +114,7 @@ double f(const int *crucible) {
 double calc_obj(const int x[17][3]) {
   double total = 0;
   for(int i=0; i<17; i++){
-    total += f(x[i]);
+    total += f(x[i], false);
   }
   return total;
 }
@@ -90,7 +124,7 @@ void print_sol(const int x[17][3]) {
     for(int j=0;j<3;j++){
       printf("%d,", x[i][j]);
     }
-    printf("val: %f", f(x[i]));
+    printf("val: %f", f(x[i], false));
     printf("\n");
   }
 }
@@ -98,7 +132,7 @@ void print_sol(const int x[17][3]) {
 void next_ascent(int x[17][3]){
   double last_crucible_values[17];
   for(int i=0;i<17;i++){
-    last_crucible_values[i] = f(x[i]);
+    last_crucible_values[i] = f(x[i], true);
   }
   int o_k = -1;
   int o_l = -1;
@@ -117,8 +151,8 @@ void next_ascent(int x[17][3]){
             x[k][m] = x[l][n];
             x[l][n] = swap;
             
-            double f_k = f(x[k]);
-            double f_l = f(x[l]);
+            double f_k = f(x[k], true);
+            double f_l = f(x[l], true);
 
             double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
             if(delta>0.001){
@@ -140,7 +174,7 @@ void next_ascent(int x[17][3]){
   }
 }
 
-void simulated_annealing(int x[17][3], double c1, double alpha) {
+void simulated_annealing(int x[17][3], double c1, double alpha, int ck_update_rate) {
   double ck = c1;
   double best = 0;
   unsigned long iter = 0;
@@ -150,7 +184,7 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
 
   double last_crucible_values[17];
   for(int i=0;i<17;i++){
-    last_crucible_values[i] = f(x[i]);
+    last_crucible_values[i] = f(x[i], true);
   }
   srand(rand());
   while(ck>0.0000000001){
@@ -166,24 +200,13 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
     x[k][m] = x[l][n];
     x[l][n] = swap;
     
-    double f_k = f(x[k]);
-    double f_l = f(x[l]);
+    double f_k = f(x[k], true);
+    double f_l = f(x[l], true);
 
     double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
     if(delta>0.0001){
       delta_over_0+=1;
     } 
-    if(iter%10000000 == 0 && iter != 0){
-      // printf("%f, %f, %f, %f, %f", f_k, f_l, last_crucible_values[k], last_crucible_values[l], delta);
-      // printf("Iterations: %lu\n", iter);
-      printf("Accepted: %d\n", accepted); 
-      printf("Ck: %0.15f\n", ck); 
-      printf("Obj: %f\n", calc_obj(x));
-      printf("Iter: %lu\n", iter);
-      // printf("Delta Over 0: %d\n", delta_over_0);
-      last_accepted = accepted;
-      accepted=0;
-    }
 
     if(delta>0.001 || (double)rand() / (double)RAND_MAX < exp(delta/ck)){
       // double obj = calc_obj(x);
@@ -197,10 +220,25 @@ void simulated_annealing(int x[17][3], double c1, double alpha) {
       x[l][n] = x[k][m];
       x[k][m] = swap;
     }
-    ck = ck*alpha;
+    
+    if(iter%10000000 == 0 && iter != 0){
+      // printf("%f, %f, %f, %f, %f", f_k, f_l, last_crucible_values[k], last_crucible_values[l], delta);
+      // printf("Iterations: %lu\n", iter);
+      printf("Accepted rate (\%): %f\n", 100*(double)accepted/(double)10000000); 
+      printf("Ck: %0.15f\n", ck); 
+      printf("Obj: %f\n", calc_obj(x));
+      printf("Iter: %lu\n", iter);
+      // printf("Delta Over 0: %d\n", delta_over_0);
+      last_accepted = accepted;
+      accepted=0;
+    }
+    
+    if(iter%ck_update_rate==0){
+      ck = ck*alpha;
+    }
     iter++; 
   }
-  printf("BEST: %f", best);
+  // printf("BEST: %f", best);
 }
 
 void generate_random_x(int x[17][3]) {
@@ -228,21 +266,21 @@ int main() {
   srand(time(NULL));
   int x[17][3];
 
-  // double best = 0;
-  // for(int i=0;i<10000000;i++){
-  //   generate_random_x(x);
-  //   next_ascent(x);
-  //   double obj = calc_obj(x);
-  //   best = obj > best ? obj : best;
-  //   if(i%100 == 0) {
-  //     printf("%d, %f\n", i, best);
-  //   }
-  // }
-  // printf("Best: %f\n", best);
+  double best = 0;
+  for(int i=0;i<10000000;i++){
+    generate_random_x(x);
+    next_ascent(x);
+    double obj = calc_obj(x);
+    best = obj > best ? obj : best;
+    if(i%100 == 0) {
+      printf("%d, %f\n", i, best);
+    }
+  }
+  printf("Best: %f\n", best);
 
-  generate_random_x(x);
-  simulated_annealing(x, 100, 0.99999999);
-  print_sol(x);
+  // generate_random_x(x);
+  // simulated_annealing(x, 100, 0.99999999, 1);
+  // print_sol(x);
   printf("Obj Found: %f", calc_obj(x));
   return 0;
 }
