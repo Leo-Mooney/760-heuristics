@@ -10,43 +10,7 @@
 \date{March 2023}
 
 \begin{document}
-
 \maketitle
-
-\section{Best Solutions}
-These were found by using simulated annealing in C.
-
-\subsection{No Max Spread}
-\begin{verbatim}
- 1 [13  4 26 ] 99.253 %Al, 0.210 %Fe, 0.373 %Si, $41.53, spread = 22
- 2 [31 46 17 ] 99.500 %Al, 0.135 %Fe, 0.144 %Si, $48.71, spread = 29
- 3 [49 14 29 ] 99.251 %Al, 0.207 %Fe, 0.314 %Si, $41.53, spread = 35
- 4 [23 27 30 ] 99.505 %Al, 0.105 %Fe, 0.199 %Si, $48.71, spread =  7
- 5 [20 50 10 ] 99.351 %Al, 0.220 %Fe, 0.327 %Si, $44.53, spread = 40
- 6 [ 8 34 19 ] 99.353 %Al, 0.244 %Fe, 0.155 %Si, $44.53, spread = 26
- 7 [ 1 48 24 ] 99.355 %Al, 0.069 %Fe, 0.342 %Si, $44.53, spread = 47
- 8 [32  6  2 ] 99.500 %Al, 0.146 %Fe, 0.227 %Si, $48.71, spread = 30
- 9 [40 36  7 ] 99.501 %Al, 0.169 %Fe, 0.121 %Si, $48.71, spread = 33
-10 [28 25 43 ] 99.252 %Al, 0.218 %Fe, 0.369 %Si, $41.53, spread = 18
-11 [21 45 16 ] 99.357 %Al, 0.199 %Fe, 0.232 %Si, $44.53, spread = 29
-12 [ 9 47 39 ] 99.501 %Al, 0.095 %Fe, 0.228 %Si, $48.71, spread = 38
-13 [37 35 11 ] 99.501 %Al, 0.067 %Fe, 0.277 %Si, $48.71, spread = 26
-14 [22 15  3 ] 99.500 %Al, 0.089 %Fe, 0.165 %Si, $48.71, spread = 19
-15 [18 42 44 ] 99.750 %Al, 0.044 %Fe, 0.136 %Si, $57.35, spread = 26
-16 [51  5 38 ] 99.351 %Al, 0.192 %Fe, 0.349 %Si, $44.53, spread = 46
-17 [41 33 12 ] 99.353 %Al, 0.099 %Fe, 0.305 %Si, $44.53, spread = 29
-                                          Sum = $790.09, MxSprd = 47
-\end{verbatim}
-
-\subsection{Max Spread = 6}
-\begin{verbatim}
-\end{verbatim}
-\subsection{Max Spread = 8}
-\begin{verbatim}
-\end{verbatim}
-\subsection{Max Spread = 11}
-\begin{verbatim}
-\end{verbatim}
 
 \section{Question 1}
 Neighbors of the current solution can be found by swapping one pot in
@@ -137,6 +101,11 @@ Best solution found using repeated steepest ascents with $n=200$
 \end{verbatim}
 
 \section{Quesion 4}
+There does not seem to be a significant difference in the objective
+value for next and steepest ascent. Steepest ascent also took far
+longer to converge on each local optimum. This means that fastest
+ascent is better than steepest ascent; however, this conclusion is from
+limited information so it not conclusive evidence.
 
 \section{Question 5}
 (a) You would expect the problem's objective function to have lots of 
@@ -156,7 +125,8 @@ x_{c3}, s) =
 $s_c = \text{max}(x_{c1}, x_{c2}, x_{c3}) - \text{min}(x_{c1}, x_{c2}, x_{c3})$
 
 
-\subsection{Results}
+\subsection{Task 6}
+See Appendix A for code.
 \subsubsection{Max Spread = 6}
 \begin{verbatim}
  1 [38 34 40 ] 99.371 %Al, 0.241 %Fe, 0.163 %Si, $44.53, spread =  6
@@ -178,6 +148,7 @@ $s_c = \text{max}(x_{c1}, x_{c2}, x_{c3}) - \text{min}(x_{c1}, x_{c2}, x_{c3})$
 17 [50 51 45 ] 99.256 %Al, 0.198 %Fe, 0.351 %Si, $41.53, spread =  6
                                           Sum = $777.27, MxSprd =  6
 \end{verbatim}
+
 \subsubsection{Max Spread = 8}
 \begin{verbatim}
  1 [15 13 11 ] 99.255 %Al, 0.157 %Fe, 0.277 %Si, $41.53, spread =  4
@@ -199,6 +170,7 @@ $s_c = \text{max}(x_{c1}, x_{c2}, x_{c3}) - \text{min}(x_{c1}, x_{c2}, x_{c3})$
 17 [42 41 37 ] 99.501 %Al, 0.115 %Fe, 0.198 %Si, $48.71, spread =  5
                                           Sum = $781.45, MxSprd =  8
 \end{verbatim}
+
 \subsubsection{Max Spread = 11}
 \begin{verbatim}
  1 [40 49 51 ] 99.301 %Al, 0.205 %Fe, 0.295 %Si, $41.53, spread = 11
@@ -222,6 +194,94 @@ $s_c = \text{max}(x_{c1}, x_{c2}, x_{c3}) - \text{min}(x_{c1}, x_{c2}, x_{c3})$
 \end{verbatim}
 
 
+\section{My Best Solutions}
+These were found by using simulated annealing in C.
+
+\subsection{No Max Spread}
+\begin{verbatim}
+ 1 [13  4 26 ] 99.253 %Al, 0.210 %Fe, 0.373 %Si, $41.53, spread = 22
+ 2 [31 46 17 ] 99.500 %Al, 0.135 %Fe, 0.144 %Si, $48.71, spread = 29
+ 3 [49 14 29 ] 99.251 %Al, 0.207 %Fe, 0.314 %Si, $41.53, spread = 35
+ 4 [23 27 30 ] 99.505 %Al, 0.105 %Fe, 0.199 %Si, $48.71, spread =  7
+ 5 [20 50 10 ] 99.351 %Al, 0.220 %Fe, 0.327 %Si, $44.53, spread = 40
+ 6 [ 8 34 19 ] 99.353 %Al, 0.244 %Fe, 0.155 %Si, $44.53, spread = 26
+ 7 [ 1 48 24 ] 99.355 %Al, 0.069 %Fe, 0.342 %Si, $44.53, spread = 47
+ 8 [32  6  2 ] 99.500 %Al, 0.146 %Fe, 0.227 %Si, $48.71, spread = 30
+ 9 [40 36  7 ] 99.501 %Al, 0.169 %Fe, 0.121 %Si, $48.71, spread = 33
+10 [28 25 43 ] 99.252 %Al, 0.218 %Fe, 0.369 %Si, $41.53, spread = 18
+11 [21 45 16 ] 99.357 %Al, 0.199 %Fe, 0.232 %Si, $44.53, spread = 29
+12 [ 9 47 39 ] 99.501 %Al, 0.095 %Fe, 0.228 %Si, $48.71, spread = 38
+13 [37 35 11 ] 99.501 %Al, 0.067 %Fe, 0.277 %Si, $48.71, spread = 26
+14 [22 15  3 ] 99.500 %Al, 0.089 %Fe, 0.165 %Si, $48.71, spread = 19
+15 [18 42 44 ] 99.750 %Al, 0.044 %Fe, 0.136 %Si, $57.35, spread = 26
+16 [51  5 38 ] 99.351 %Al, 0.192 %Fe, 0.349 %Si, $44.53, spread = 46
+17 [41 33 12 ] 99.353 %Al, 0.099 %Fe, 0.305 %Si, $44.53, spread = 29
+                                          Sum = $790.09, MxSprd = 47
+\end{verbatim}
+
+\subsection{Max Spread = 6}
+\begin{verbatim}
+ 1 [44,49,48,] 99.511 %Al, 0.169 %Fe, 0.145 %Si, $48.71, spread=5
+ 2 [18,19,21,] 99.512 %Al, 0.163 %Fe, 0.187 %Si, $48.71, spread=3
+ 3 [43,47,46,] 99.359 %Al, 0.172 %Fe, 0.315 %Si, $44.53, spread=4
+ 4 [9,11,12,] 99.535 %Al, 0.015 %Fe, 0.265 %Si, $48.71, spread=3
+ 5 [27,24,22,] 99.502 %Al, 0.068 %Fe, 0.194 %Si, $48.71, spread=5
+ 6 [36,39,34,] 99.502 %Al, 0.139 %Fe, 0.173 %Si, $48.71, spread=5
+ 7 [25,23,28,] 99.267 %Al, 0.185 %Fe, 0.332 %Si, $41.53, spread=5
+ 8 [38,37,42,] 99.650 %Al, 0.118 %Fe, 0.067 %Si, $52.44, spread=5
+ 9 [51,50,45,] 99.256 %Al, 0.198 %Fe, 0.351 %Si, $41.53, spread=6
+ 10 [2,7,5,] 99.505 %Al, 0.182 %Fe, 0.208 %Si, $48.71, spread=5
+ 11 [29,26,31,] 99.372 %Al, 0.094 %Fe, 0.350 %Si, $44.53, spread=5
+ 12 [16,14,20,] 99.298 %Al, 0.164 %Fe, 0.379 %Si, $41.53, spread=6
+ 13 [33,32,30,] 99.541 %Al, 0.070 %Fe, 0.160 %Si, $48.71, spread=3
+ 14 [6,8,10,] 99.352 %Al, 0.257 %Fe, 0.275 %Si, $44.53, spread=4
+ 15 [3,1,4,] 99.363 %Al, 0.151 %Fe, 0.284 %Si, $44.53, spread=3
+ 16 [13,15,17,] 99.276 %Al, 0.220 %Fe, 0.261 %Si, $41.53, spread=4
+ 17 [35,40,41,] 99.335 %Al, 0.141 %Fe, 0.317 %Si, $41.53, spread=6
+Sum = $779.18, MxSprd = 6 
+\end{verbatim}
+\subsection{Max Spread = 8}
+\begin{verbatim}
+ 1 [8,1,6,] 99.358 %Al, 0.130 %Fe, 0.315 %Si, $44.53, spread=7
+ 2 [24,27,21,] 99.506 %Al, 0.091 %Fe, 0.245 %Si, $48.71, spread=6
+ 3 [26,31,29,] 99.372 %Al, 0.094 %Fe, 0.350 %Si, $44.53, spread=5
+ 4 [32,40,34,] 99.353 %Al, 0.199 %Fe, 0.210 %Si, $44.53, spread=8
+ 5 [46,44,41,] 99.507 %Al, 0.108 %Fe, 0.191 %Si, $48.71, spread=5
+ 6 [22,15,18,] 99.514 %Al, 0.064 %Fe, 0.164 %Si, $48.71, spread=7
+ 7 [17,13,20,] 99.359 %Al, 0.191 %Fe, 0.305 %Si, $44.53, spread=7
+ 8 [38,33,35,] 99.501 %Al, 0.105 %Fe, 0.167 %Si, $48.71, spread=5
+ 9 [47,39,43,] 99.370 %Al, 0.153 %Fe, 0.341 %Si, $44.53, spread=8
+ 10 [7,2,5,] 99.505 %Al, 0.182 %Fe, 0.208 %Si, $48.71, spread=5
+ 11 [51,45,50,] 99.256 %Al, 0.198 %Fe, 0.351 %Si, $41.53, spread=6
+ 12 [12,16,19,] 99.362 %Al, 0.204 %Fe, 0.275 %Si, $44.53, spread=7
+ 13 [11,9,14,] 99.381 %Al, 0.080 %Fe, 0.297 %Si, $44.53, spread=5
+ 14 [36,30,37,] 99.654 %Al, 0.098 %Fe, 0.129 %Si, $52.44, spread=7
+ 15 [10,3,4,] 99.357 %Al, 0.278 %Fe, 0.244 %Si, $44.53, spread=7
+ 16 [49,48,42,] 99.513 %Al, 0.147 %Fe, 0.139 %Si, $48.71, spread=7
+ 17 [28,25,23,] 99.267 %Al, 0.185 %Fe, 0.332 %Si, $41.53, spread=5
+Sum = $784.00, MxSprd = 8      
+\end{verbatim}
+\subsection{Max Spread = 11}
+\begin{verbatim}
+ 1 [24,19,26,] 99.355 %Al, 0.140 %Fe, 0.305 %Si, $44.53, spread=7
+ 2 [27,33,37,] 99.500 %Al, 0.148 %Fe, 0.086 %Si, $48.71, spread=10
+ 3 [38,28,34,] 99.262 %Al, 0.236 %Fe, 0.270 %Si, $41.53, spread=10
+ 4 [48,50,41,] 99.351 %Al, 0.151 %Fe, 0.329 %Si, $44.53, spread=9
+ 5 [49,43,51,] 99.294 %Al, 0.189 %Fe, 0.367 %Si, $41.53, spread=8
+ 6 [44,47,39,] 99.500 %Al, 0.124 %Fe, 0.270 %Si, $48.71, spread=8
+ 7 [42,36,45,] 99.504 %Al, 0.145 %Fe, 0.069 %Si, $48.71, spread=9
+ 8 [35,46,40,] 99.504 %Al, 0.110 %Fe, 0.193 %Si, $48.71, spread=11
+ 9 [4,3,1,] 99.363 %Al, 0.151 %Fe, 0.284 %Si, $44.53, spread=3
+ 10 [10,6,8,] 99.352 %Al, 0.257 %Fe, 0.275 %Si, $44.53, spread=4
+ 11 [32,31,21,] 99.501 %Al, 0.089 %Fe, 0.201 %Si, $48.71, spread=11
+ 12 [14,15,12,] 99.251 %Al, 0.139 %Fe, 0.370 %Si, $41.53, spread=3
+ 13 [9,11,17,] 99.512 %Al, 0.072 %Fe, 0.221 %Si, $48.71, spread=8
+ 14 [30,20,23,] 99.503 %Al, 0.072 %Fe, 0.255 %Si, $48.71, spread=10
+ 15 [29,25,18,] 99.505 %Al, 0.134 %Fe, 0.271 %Si, $48.71, spread=11
+ 16 [16,13,22,] 99.374 %Al, 0.167 %Fe, 0.288 %Si, $44.53, spread=9
+ 17 [7,2,5,] 99.505 %Al, 0.182 %Fe, 0.208 %Si, $48.71, spread=5
+Sum = $785.63, MxSprd = 11
+\end{verbatim}
 
 
 \end{document}

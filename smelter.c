@@ -133,7 +133,7 @@ double f_spread(const int *crucible, const int max_spread) {
 
   double tol = 0.00001;
   int spread = max(crucible[0], crucible[1], crucible[2]) - min(crucible[0], crucible[1], crucible[2]);
-  double spread_penalty = (spread > max_spread) ? -10000*(spread-max_spread) : 0;
+  double spread_penalty = (spread > max_spread) ? -10*(spread-max_spread) : 0;
   for(int i=10;i>=0;i--){
     if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) { 
       return grade_value[i] + spread_penalty;
@@ -187,7 +187,7 @@ void print_sol_spread(const int x[17][3], const int max_spread) {
     double al = average(x, i, 0);
     double fe = average(x, i, 1);
     double si = average(x, i, 2);
-    printf(" ] %.3f %%Al, %.3f %%Fe, %.3f %%Si, $%.2f, spread=%d", al, fe, si, f_spread(x[i], spread), spread);
+    printf("] %.3f %%Al, %.3f %%Fe, %.3f %%Si, $%.2f, spread=%d", al, fe, si, f_spread(x[i], spread), spread);
     printf("\n");
   }
   printf("Sum = $%.3f, MxSprd = %d", calc_obj_spread(x, max_spread), MxSprd);
@@ -397,7 +397,7 @@ int main() {
   srand(time(NULL));
   int x[17][3];
 
-  int max_spread = 6;
+  int max_spread = 8;
   generate_random_x(x);
   simulated_annealing_spread(x, 100, 0.999999999, 1, max_spread);
   print_sol_spread(x, max_spread);

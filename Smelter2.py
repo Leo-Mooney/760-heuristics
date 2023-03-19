@@ -108,7 +108,7 @@ class LocalSearch():
            Returns 0 if the aluminium does not satisfy any of the quality grades."""
         tol = 0.00001 # We allow for small errors in 5th decimal point
         # spread penalty calcaultion
-        spread_penalty = -10000*(spread - max_spread) if spread > max_spread else 0
+        spread_penalty = -100*(spread - max_spread) if spread > max_spread else 0
         for q in reversed(range(self.no_grades)): 
             if crucible_quality[Element.Al] >= self.grade_min_Al[q]-tol and \
                crucible_quality[Element.Fe] <= self.grade_max_Fe[q] + tol and \
