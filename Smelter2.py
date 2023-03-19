@@ -102,10 +102,12 @@ class LocalSearch():
                 return self.grade_value[q]
         return 0.0
 
-    def calc_crucible_value_with_spread(self, crucible_quality, spread, max_spread) -> float: 
+    # Calculate the crucible value with a maximum allowed spreaj
+    def calc_crucible_value_with_spread(self, crucible_quality, spread: int, max_spread: int) -> float: 
         """Return the $ value of a crucible with the given Al (aluminium), Fe (iron) & Si (silicon) percentages.
            Returns 0 if the aluminium does not satisfy any of the quality grades."""
         tol = 0.00001 # We allow for small errors in 5th decimal point
+        # spread penalty calcaultion
         spread_penalty = -10000*(spread - max_spread) if spread > max_spread else 0
         for q in reversed(range(self.no_grades)): 
             if crucible_quality[Element.Al] >= self.grade_min_Al[q]-tol and \
@@ -114,7 +116,7 @@ class LocalSearch():
                 return self.grade_value[q] + spread_penalty
         return 0.0
 
-    def view_soln(self, x, max_allowed_spread=0) -> None:
+    def view_soln(self, x, max_allowed_spread: int=0) -> None:
         """Print solution x with its statistics. Note that our output numbers items from 1, not 0"""
         max_spread = 0
         crucible_value_sum = 0
@@ -122,6 +124,7 @@ class LocalSearch():
             spread = max(x[c]) - min(x[c])
             max_spread = max(max_spread, spread)
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+            # max allowed spread functionality added (only calculate with max allowed spread if defined non-zero)
             if max_allowed_spread:
                 crucible_value = self.calc_crucible_value_with_spread(crucible_quality, spread, max_allowed_spread)
             else:
@@ -135,11 +138,12 @@ class LocalSearch():
                   f'${crucible_value:>5.2f}, spread = {spread:>2}' )
         print(f'                                          Sum = ${round(crucible_value_sum,2):>6}, MxSprd = {max_spread:>2}') 
 
-    def calc_obj(self, x, max_allowed_spread=0):
+    def calc_obj(self, x, max_allowed_spread: int=0):
         """Calculate the total profit for a given solution"""
         crucible_value_sum = 0
         for c in range (self.no_crucibles): 
             crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+            # max allowed spread functionality added (only calculate with max allowed spread if defined non-zero)
             if max_allowed_spread:
                 crucible_value = self.calc_crucible_value_with_spread(crucible_quality, np.ptp(x[c]), max_allowed_spread)
             else:
@@ -158,48 +162,21 @@ class LocalSearch():
         rng.shuffle(x)
         return x.reshape(self.no_crucibles, self.pots_per_crucible)
 
-    def plot_ascent(self, fx, fy):
+    def plot_ascent(self, fx, fy, save_name: str, title: str):
+        fig = plt.figure()
         plt.plot(fy,'r', label="f(y)")
         plt.plot(fx,'b', label="f(x)")
         plt.xlabel('Function Evaluation Count')
         plt.ylabel('Objective Function Value')
         plt.legend()
-        plt.show()
+        plt.title(title)
+        plt.gcf().set_size_inches(11.69, 8.27) 
+        plt.savefig(f"./report/assets/{save_name}", orientation="landscape")
 
-    def next_ascent_spread(self, max_spread):
-        x = self.random_solution()
-        last_crucible_values = np.zeros(self.no_crucibles)
-        for c in range(self.no_crucibles):
-            crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-            last_crucible_values[c] = self.calc_crucible_value_with_spread(crucible_quality, np.ptp(x[c]), max_spread)
-
-        last_optimal_indices = (-1, -1, -1, -1)
-        while True:
-            for k in range(self.no_crucibles-1):
-                for m in range(self.pots_per_crucible):
-                    for l in range(k+1, self.no_crucibles):
-                        for n in range(self.pots_per_crucible):
-                            if (k, m, l, n) == last_optimal_indices:
-                                return x
-                            crucible_k = x[k].copy()
-                            crucible_l = x[l].copy()
-                            crucible_k[m] = x[l][n]
-                            crucible_l[n] = x[k][m]
-                            crucible_k_quality = [ (sum( self.pot_quality[crucible_k[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-                            crucible_k_value = self.calc_crucible_value_with_spread(crucible_k_quality, np.ptp(crucible_k), max_spread)
-                            crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
-                            crucible_l_value = self.calc_crucible_value_with_spread(crucible_l_quality, np.ptp(crucible_l), max_spread)
-                            delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
-                            if delta > 0.01:
-                                last_optimal_indices = (k, m, l, n)
-                                last_crucible_values[k] = crucible_k_value
-                                last_crucible_values[l] = crucible_l_value
-                                x[k][m] = crucible_k[m]
-                                x[l][n] = crucible_l[n]
-            if last_optimal_indices == (-1, -1, -1, -1):
-                return x
-
-    def next_ascent(self, random_start=True, plotting=False):
+    ###########
+    # TASK 3A #
+    ###########
+    def next_ascent_to_local_max(self, random_start=True, plotting=False):
         if random_start:
             x = self.random_solution()
         else:
@@ -229,7 +206,7 @@ class LocalSearch():
                             # exactly one scan since last optimal value found, can return
                             if (k, m, l, n) == last_optimal_indices:
                                 if plotting:
-                                    self.plot_ascent(fx, fy)
+                                    self.plot_ascent(fx, fy, "next_ascent_chart.pdf", "Task 3C")
                                 return x
 
                             # calculate crucible values and delta
@@ -262,36 +239,13 @@ class LocalSearch():
             # case where starting at local max
             if last_optimal_indices == (-1, -1, -1, -1):
                 if plotting:
-                    self.plot_ascent(fx, fy)
+                    self.plot_ascent(fx, fy, "next_ascent_chart.pdf", "Task 3C")
                 return x
 
-    def do_repeated_next_ascents(self, n: int):
-        best_obj_history = []
-        obj_history = []
-        times = []
-
-        best_obj = 0
-        start_time = time.perf_counter()
-        for _ in range(n):
-            x = self.next_ascent()           
-            obj = self.calc_obj(x)
-            if obj > best_obj:
-                best_x = x
-                best_obj = obj
-            best_obj_history.append(best_obj)
-            obj_history.append(obj)
-            times.append(time.perf_counter() - start_time)
-
-        self.view_soln(best_x)
-        plt.scatter(times,best_obj_history,c='b',s=1, label="Best objective value")
-        plt.scatter(times,obj_history,c='r',s=5, label="Local max")
-        plt.xlabel('Time (s)')
-        plt.ylabel('Objective Function Value')
-        plt.legend()
-        plt.gcf().set_size_inches(11.69, 8.27) 
-        plt.savefig("assets/repeated_next_ascents_chart.pdf", orientation="landscape")
-
-    def steepest_ascent(self, random_start=True, plotting=False):
+    ###########
+    # TASK 3B #
+    ###########
+    def steepest_ascent_to_local_max(self, random_start=True, plotting=False):
         if random_start: 
             x = self.random_solution()
         else:
@@ -342,7 +296,7 @@ class LocalSearch():
             # if all neighbors scanned and no better solution found, at local max and finish
             if optimal_swap == (-1, -1, -1, -1):
                 if plotting:
-                    self.plot_ascent(fx, fy)
+                    self.plot_ascent(fx, fy, "steepest_ascent_chart.pdf", "Task 3D")
                 return x
 
             # Make swap with steepest neighbor and update intermediate values
@@ -360,15 +314,24 @@ class LocalSearch():
             x[k][m] = crucible_k[m]
             x[l][n] = crucible_l[n]
 
-    def do_repeated_steepest_ascents(self, n: int):
+
+    ###########
+    # TASK 3E #
+    ###########
+    def do_repeated_next_ascents(self, n: int, max_spread: int = 0, plotting=True):
         best_obj_history = []
         obj_history = []
         times = []
-
+        
+        # Iterate through random starts to find history and best solution
         best_obj = 0
         start_time = time.perf_counter()
         for _ in range(n):
-            x = self.steepest_ascent()           
+            # If max spread specified then do with max spread (for Task 6)
+            if max_spread:
+                x = self.next_ascent_to_local_max_spread(max_spread)           
+            else:
+                x = self.next_ascent_to_local_max()           
             obj = self.calc_obj(x)
             if obj > best_obj:
                 best_x = x
@@ -377,13 +340,107 @@ class LocalSearch():
             obj_history.append(obj)
             times.append(time.perf_counter() - start_time)
 
+        # Output and plot best solution
+        print(f"repeated next ascents max_spread={max_spread}")
         self.view_soln(best_x)
+        if plotting:
+            fig = plt.figure()
+            plt.scatter(times,best_obj_history,c='b',s=1, label="Best objective value")
+            plt.scatter(times,obj_history,c='r',s=5, label="Local max")
+            plt.xlabel('Time (s)')
+            plt.ylabel('Objective Function Value')
+            plt.legend()
+            if max_spread:
+                plt.title(f"Task 6 Repeated Next Ascents (n={n}, max_spread={max_spread})")
+            else:
+                plt.title(f"Task 3E Repeated Next Ascents (n={n})")
+            plt.gcf().set_size_inches(11.69, 8.27) 
+            if max_spread:
+                plt.savefig(f"./report/assets/repeated_next_ascents_chart__max_spread_{max_spread}.pdf", orientation="landscape")
+            else:
+                plt.savefig("./report/assets/repeated_next_ascents_chart.pdf", orientation="landscape")
+    ###########
+    # TASK 3E #
+    ###########
+    def do_repeated_steepest_ascents(self, n: int):
+        best_obj_history = []
+        obj_history = []
+        times = []
+
+        # Iterate through random starts to find history and best solution
+        best_obj = 0
+        start_time = time.perf_counter()
+        for _ in range(n):
+            x = self.steepest_ascent_to_local_max()           
+            obj = self.calc_obj(x)
+            if obj > best_obj:
+                best_x = x
+                best_obj = obj
+            best_obj_history.append(best_obj)
+            obj_history.append(obj)
+            times.append(time.perf_counter() - start_time)
+
+        # Output and plot best solution
+        self.view_soln(best_x)
+        fig = plt.figure()
         plt.scatter(times,best_obj_history,c='b',s=1, label="Best objective value")
         plt.scatter(times,obj_history,c='r',s=5, label="Local max")
         plt.xlabel('Time (s)')
         plt.ylabel('Objective Function Value')
+        plt.title(f"Task 3E Repeated Steepest Ascents (n={n})")
         plt.legend()
-        plt.show()
+        plt.gcf().set_size_inches(11.69, 8.27) 
+        plt.savefig("./report/assets/repeated_steepest_ascents_chart.pdf", orientation="landscape")
+
+    ##########
+    # TASK 6 #
+    ##########
+    def next_ascent_to_local_max_spread(self, max_spread: int, random_start=True):
+        if random_start:
+            x = self.random_solution()
+        else:
+            x = self.trivial_solution()
+
+        # init intermeidate values
+        last_crucible_values = np.zeros(self.no_crucibles)
+        for c in range(self.no_crucibles):
+            crucible_quality = [ (sum( self.pot_quality[x[c][i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+            last_crucible_values[c] = self.calc_crucible_value_with_spread(crucible_quality, np.ptp(x[c]), max_spread)
+
+        # Loop through neighbors
+        last_optimal_indices = (-1, -1, -1, -1)
+        while True:
+            for k in range(self.no_crucibles-1):
+                for m in range(self.pots_per_crucible):
+                    for l in range(k+1, self.no_crucibles):
+                        for n in range(self.pots_per_crucible):
+                            # looped through all neighbors once and no better solution found
+                            if (k, m, l, n) == last_optimal_indices:
+                                return x
+
+                            # calculate delta and other relevant params 
+                            crucible_k = x[k].copy()
+                            crucible_l = x[l].copy()
+                            crucible_k[m] = x[l][n]
+                            crucible_l[n] = x[k][m]
+                            crucible_k_quality = [ (sum( self.pot_quality[crucible_k[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+                            crucible_k_value = self.calc_crucible_value_with_spread(crucible_k_quality, np.ptp(crucible_k), max_spread)
+                            crucible_l_quality = [ (sum( self.pot_quality[crucible_l[i]][e] for i in range(self.pots_per_crucible) ) / self.pots_per_crucible) for e in Element]
+                            crucible_l_value = self.calc_crucible_value_with_spread(crucible_l_quality, np.ptp(crucible_l), max_spread)
+                            delta = crucible_k_value + crucible_l_value - last_crucible_values[k] - last_crucible_values[l]
+
+                            # better solution so update intermediate values and solution 
+                            if delta > 0.01:
+                                last_optimal_indices = (k, m, l, n)
+                                last_crucible_values[k] = crucible_k_value
+                                last_crucible_values[l] = crucible_l_value
+                                x[k][m] = crucible_k[m]
+                                x[l][n] = crucible_l[n]
+
+            # case where already at local max
+            if last_optimal_indices == (-1, -1, -1, -1):
+                return x
+
 
     def simulated_annealing(self, c1, alpha):
         x = self.random_solution()
@@ -426,80 +483,14 @@ class LocalSearch():
 
 
 if __name__ == "__main__":
-    # Create the local search class defining a default problem to be solved
     ls = LocalSearch()
-    x = ls.simulated_annealing(c1=10, alpha=0.999)
-
-
-    
-    # Create and view a simple 'trivial' solution
-    # x = ls.trivial_solution()
-    # ls.view_soln(x)
-    #
-    # # Change to a small test problem and view a random solution
     # ls.load_small_problem()
-    # x = ls.random_solution()
-    # ls.view_soln(x)
-    
-    # Switch back to the default problem
-    # ls.load_default_problem()
-    #
-    # # Generate data for a plot showing many random solutions along with the best solution found so far
-    # obj_fn_values = []
-    # best_obj_fn_values = []
-    # zbest = 0
-    # # We start with the 'trivial' solution as the 0'th entry in our plot data
-    # x = ls.trivial_solution()
-    # z = ls.calc_obj(x)
-    # zbest = max(z,zbest)
-    # obj_fn_values.append(z)
-    # best_obj_fn_values.append(zbest)
-    #
-    # # Add 1000 random solutions
-    # for i in range(100):
-    #     if i%1 == 0:
-    #         print(i)
-    #         print(zbest)
-    #     x = ls.simulated_annealing(c1=100, alpha=0.999)
-    #     z = ls.calc_obj(x)
-    #     if z > zbest:
-    #         xbest = x
-    #     zbest = max(z,zbest)
-    #     obj_fn_values.append(z)
-    #     best_obj_fn_values.append(zbest)
-    # ls.view_soln(xbest)
-    # # Generate the actual plot
-    # plt.plot(obj_fn_values,'r')
-    # plt.plot(best_obj_fn_values,'b')
-    # plt.xlabel('Function Evaluation Count')
-    # plt.ylabel('Objective Function Value')
-    # plt.show()
+    # ls.next_ascent_to_local_max(random_start=False, plotting=True)
+    # ls.steepest_ascent_to_local_max(random_start=False, plotting=True)
+    ls.load_default_problem()
+    # ls.do_repeated_next_ascents(200)
+    # ls.do_repeated_steepest_ascents(200)
+    ls.do_repeated_next_ascents(200, max_spread=6, plotting=False)
+    ls.do_repeated_next_ascents(200, max_spread=8, plotting=False)
+    ls.do_repeated_next_ascents(200, max_spread=11, plotting=False)
 
-    # # Generate data for a plot showing many random solutions along with the best solution found so far
-    # # This differs from the previous plot by having an x-axis of time
-    # obj_fn_values = []
-    # best_obj_fn_values = []
-    # times = []
-    # zbest = 0
-    # # We start with the 'trivial' solution as the 0'th entry in our plot data
-    # x = ls.trivial_solution()
-    # z = ls.calc_obj(x)
-    # zbest = max(z,zbest)
-    # obj_fn_values.append(z)
-    # best_obj_fn_values.append(zbest)
-    # times.append(0)
-    # # Add 1000 random solutions
-    # start_time = time.perf_counter()
-    # for i in range(1000):
-    #     x = ls.random_solution()
-    #     z = ls.calc_obj(x)
-    #     zbest = max(z,zbest)
-    #     obj_fn_values.append(z)
-    #     best_obj_fn_values.append(zbest)
-    #     times.append(time.perf_counter() - start_time)
-    # # Generate the actual plot
-    # plt.scatter(times,best_obj_fn_values,c='b',s=1)
-    # plt.scatter(times,obj_fn_values,c='r',s=5)
-    # plt.xlabel('Time')
-    # plt.ylabel('Objective Function Value')
-    # plt.show()

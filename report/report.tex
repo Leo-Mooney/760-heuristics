@@ -1,0 +1,216 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{listings}
+
+\title{760-Heuristics-Assignment}
+\author{Leo Mooney}
+\date{March 2023}
+
+\begin{document}
+
+\maketitle
+
+\section{Best Solutions}
+These were found by using simulated annealing in C.
+
+\subsection{No Max Spread}
+\begin{verbatim}
+ 1 [13  4 26 ] 99.253 %Al, 0.210 %Fe, 0.373 %Si, $41.53, spread = 22
+ 2 [31 46 17 ] 99.500 %Al, 0.135 %Fe, 0.144 %Si, $48.71, spread = 29
+ 3 [49 14 29 ] 99.251 %Al, 0.207 %Fe, 0.314 %Si, $41.53, spread = 35
+ 4 [23 27 30 ] 99.505 %Al, 0.105 %Fe, 0.199 %Si, $48.71, spread =  7
+ 5 [20 50 10 ] 99.351 %Al, 0.220 %Fe, 0.327 %Si, $44.53, spread = 40
+ 6 [ 8 34 19 ] 99.353 %Al, 0.244 %Fe, 0.155 %Si, $44.53, spread = 26
+ 7 [ 1 48 24 ] 99.355 %Al, 0.069 %Fe, 0.342 %Si, $44.53, spread = 47
+ 8 [32  6  2 ] 99.500 %Al, 0.146 %Fe, 0.227 %Si, $48.71, spread = 30
+ 9 [40 36  7 ] 99.501 %Al, 0.169 %Fe, 0.121 %Si, $48.71, spread = 33
+10 [28 25 43 ] 99.252 %Al, 0.218 %Fe, 0.369 %Si, $41.53, spread = 18
+11 [21 45 16 ] 99.357 %Al, 0.199 %Fe, 0.232 %Si, $44.53, spread = 29
+12 [ 9 47 39 ] 99.501 %Al, 0.095 %Fe, 0.228 %Si, $48.71, spread = 38
+13 [37 35 11 ] 99.501 %Al, 0.067 %Fe, 0.277 %Si, $48.71, spread = 26
+14 [22 15  3 ] 99.500 %Al, 0.089 %Fe, 0.165 %Si, $48.71, spread = 19
+15 [18 42 44 ] 99.750 %Al, 0.044 %Fe, 0.136 %Si, $57.35, spread = 26
+16 [51  5 38 ] 99.351 %Al, 0.192 %Fe, 0.349 %Si, $44.53, spread = 46
+17 [41 33 12 ] 99.353 %Al, 0.099 %Fe, 0.305 %Si, $44.53, spread = 29
+                                          Sum = $790.09, MxSprd = 47
+\end{verbatim}
+
+\subsection{Max Spread = 6}
+\begin{verbatim}
+ 1 [38 34 40 ] 99.371 %Al, 0.241 %Fe, 0.163 %Si, $44.53, spread =  6
+ 2 [17 13 19 ] 99.270 %Al, 0.297 %Fe, 0.234 %Si, $41.53, spread =  6
+ 3 [35 36 39 ] 99.615 %Al, 0.043 %Fe, 0.196 %Si, $48.71, spread =  4
+ 4 [ 6  8 10 ] 99.352 %Al, 0.257 %Fe, 0.275 %Si, $44.53, spread =  4
+ 5 [30 32 27 ] 99.558 %Al, 0.093 %Fe, 0.170 %Si, $48.71, spread =  5
+ 6 [37 42 41 ] 99.501 %Al, 0.115 %Fe, 0.198 %Si, $48.71, spread =  5
+ 7 [24 22 21 ] 99.532 %Al, 0.037 %Fe, 0.276 %Si, $48.71, spread =  3
+ 8 [33 29 28 ] 99.256 %Al, 0.151 %Fe, 0.303 %Si, $41.53, spread =  5
+ 9 [11 14  9 ] 99.381 %Al, 0.080 %Fe, 0.297 %Si, $44.53, spread =  5
+10 [ 5  7  3 ] 99.512 %Al, 0.188 %Fe, 0.212 %Si, $48.71, spread =  4
+11 [46 47 43 ] 99.359 %Al, 0.172 %Fe, 0.315 %Si, $44.53, spread =  4
+12 [26 25 31 ] 99.393 %Al, 0.138 %Fe, 0.325 %Si, $44.53, spread =  6
+13 [49 48 44 ] 99.511 %Al, 0.169 %Fe, 0.145 %Si, $48.71, spread =  5
+14 [20 18 23 ] 99.544 %Al, 0.057 %Fe, 0.220 %Si, $48.71, spread =  5
+15 [15 16 12 ] 99.369 %Al, 0.127 %Fe, 0.302 %Si, $44.53, spread =  4
+16 [ 2  4  1 ] 99.356 %Al, 0.144 %Fe, 0.280 %Si, $44.53, spread =  3
+17 [50 51 45 ] 99.256 %Al, 0.198 %Fe, 0.351 %Si, $41.53, spread =  6
+                                          Sum = $777.27, MxSprd =  6
+\end{verbatim}
+\subsection{Max Spread = 8}
+\begin{verbatim}
+ 1 [15 13 11 ] 99.255 %Al, 0.157 %Fe, 0.277 %Si, $41.53, spread =  4
+ 2 [ 2  1  4 ] 99.356 %Al, 0.144 %Fe, 0.280 %Si, $44.53, spread =  3
+ 3 [46 49 51 ] 99.399 %Al, 0.152 %Fe, 0.259 %Si, $44.53, spread =  5
+ 4 [26 19 24 ] 99.355 %Al, 0.140 %Fe, 0.305 %Si, $44.53, spread =  7
+ 5 [32 29 36 ] 99.509 %Al, 0.087 %Fe, 0.197 %Si, $48.71, spread =  7
+ 6 [34 35 33 ] 99.358 %Al, 0.156 %Fe, 0.278 %Si, $44.53, spread =  2
+ 7 [ 8  3 10 ] 99.527 %Al, 0.176 %Fe, 0.194 %Si, $48.71, spread =  7
+ 8 [48 50 44 ] 99.544 %Al, 0.129 %Fe, 0.241 %Si, $48.71, spread =  6
+ 9 [14  6  7 ] 99.253 %Al, 0.249 %Fe, 0.360 %Si, $41.53, spread =  8
+10 [16 18 17 ] 99.542 %Al, 0.132 %Fe, 0.258 %Si, $48.71, spread =  2
+11 [30 27 23 ] 99.505 %Al, 0.105 %Fe, 0.199 %Si, $48.71, spread =  7
+12 [20 22 21 ] 99.516 %Al, 0.060 %Fe, 0.277 %Si, $48.71, spread =  2
+13 [43 45 38 ] 99.350 %Al, 0.226 %Fe, 0.125 %Si, $44.53, spread =  7
+14 [ 9  5 12 ] 99.510 %Al, 0.106 %Fe, 0.258 %Si, $48.71, spread =  7
+15 [40 39 47 ] 99.378 %Al, 0.169 %Fe, 0.269 %Si, $44.53, spread =  8
+16 [28 25 31 ] 99.278 %Al, 0.204 %Fe, 0.285 %Si, $41.53, spread =  6
+17 [42 41 37 ] 99.501 %Al, 0.115 %Fe, 0.198 %Si, $48.71, spread =  5
+                                          Sum = $781.45, MxSprd =  8
+\end{verbatim}
+\subsection{Max Spread = 11}
+\begin{verbatim}
+ 1 [40 49 51 ] 99.301 %Al, 0.205 %Fe, 0.295 %Si, $41.53, spread = 11
+ 2 [35 33 34 ] 99.358 %Al, 0.156 %Fe, 0.278 %Si, $44.53, spread =  2
+ 3 [ 5  3  7 ] 99.512 %Al, 0.188 %Fe, 0.212 %Si, $48.71, spread =  4
+ 4 [29 31 28 ] 99.257 %Al, 0.160 %Fe, 0.310 %Si, $41.53, spread =  3
+ 5 [ 4  6  9 ] 99.386 %Al, 0.217 %Fe, 0.204 %Si, $44.53, spread =  5
+ 6 [36 32 26 ] 99.524 %Al, 0.048 %Fe, 0.266 %Si, $48.71, spread = 10
+ 7 [39 44 47 ] 99.500 %Al, 0.124 %Fe, 0.270 %Si, $48.71, spread =  8
+ 8 [25 18 16 ] 99.527 %Al, 0.153 %Fe, 0.256 %Si, $48.71, spread =  9
+ 9 [41 50 48 ] 99.351 %Al, 0.151 %Fe, 0.329 %Si, $44.53, spread =  9
+10 [14 22 24 ] 99.362 %Al, 0.083 %Fe, 0.335 %Si, $44.53, spread = 10
+11 [13 23 19 ] 99.251 %Al, 0.258 %Fe, 0.213 %Si, $41.53, spread = 10
+12 [30 27 20 ] 99.530 %Al, 0.104 %Fe, 0.212 %Si, $48.71, spread = 10
+13 [46 42 45 ] 99.502 %Al, 0.140 %Fe, 0.056 %Si, $48.71, spread =  4
+14 [21 10 17 ] 99.369 %Al, 0.239 %Fe, 0.344 %Si, $44.53, spread = 11
+15 [37 43 38 ] 99.519 %Al, 0.169 %Fe, 0.143 %Si, $48.71, spread =  6
+16 [11 12 15 ] 99.361 %Al, 0.068 %Fe, 0.309 %Si, $44.53, spread =  4
+17 [ 8  1  2 ] 99.526 %Al, 0.042 %Fe, 0.230 %Si, $48.71, spread =  7
+                                          Sum = $781.45, MxSprd = 11
+\end{verbatim}
+
+\section{Question 1}
+Neighbors of the current solution can be found by swapping one pot in
+any crucible with a pot in any other crucible.
+This can be formally defined as following:
+
+$N(\mathbf{x}) = \{\mathbf{y}(\mathbf{x}, k, l, m, n), k=1,2,3,...,16, 
+l=k+1,k+2,k+3,...17, m=1,2,3, n=1,2,3\}$ where
+
+$$\mathbf{y}(\mathbf{x},k,l,m,n)=(y_{1, 1},y_{1, 2},y_{1, 3};
+y_{2, 1}y_{2, 2}y_{2, 3};...y_{c, j}),y_{c,j}=
+\begin{cases}
+    x_{l, n} & \text{if } c=k,j=m \\
+    x_{k, m} & \text{if } c=l,j=n \\
+    x_{c,j} & \text{otherwise}
+\end{cases}$$
+
+\section{Question 2}
+\begin{algorithm}
+\caption{Sweep x}
+\begin{algorithmic}
+\STATE Let $x$ be the current configuration
+\STATE Let $I$ be the intermediate values\\
+\STATE Let $I_c = g(\overline{Al}[x_c], \overline{Fe}[x_c] \overline{Si}[x_c])$
+\FOR{k={1...16}; m={1...3}; l={k...17}; n={1..3}}
+\STATE $y = y(x, k, l, m, n)$ 
+\STATE $d = g(\overline{Al}[y_k], \overline{Fe}[y_k] \overline{Si}[y_k]) + g(\overline{Al}[y_l], \overline{Fe}[y_l] \overline{Si}[y_l]) - I_k - I_l$
+\IF{$d > 0$} 
+\STATE $x := y$ 
+\STATE $I_k = g(\overline{Al}[y_k], \overline{Fe}[y_k] \overline{Si}[y_k])$ 
+\STATE $I_l = g(a(\overline{Al}[y_l], \overline{Fe}[y_l] \overline{Si}[y_l]))$ 
+\ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+\section{Question 3}
+\subsection{Question 3A}
+See Appendix A for code.
+\subsection{Question 3B}
+See Appendix A for code.
+\subsection{Question 3C}
+See Appendix A for plot.
+\subsection{Question 3D}
+See Appendix A for plot.
+\subsection{Question 3E}
+See Appendix A for code and plots. Best solution found using repeated next ascents with $n=200$
+\begin{verbatim}
+ 1 [27  4 45 ] 99.261 %Al, 0.274 %Fe, 0.110 %Si, $41.53, spread = 41
+ 2 [ 8 13 37 ] 99.508 %Al, 0.154 %Fe, 0.153 %Si, $48.71, spread = 29
+ 3 [50 40 30 ] 99.504 %Al, 0.143 %Fe, 0.238 %Si, $48.71, spread = 20
+ 4 [17 51 15 ] 99.268 %Al, 0.162 %Fe, 0.386 %Si, $41.53, spread = 36
+ 5 [24 23 46 ] 99.512 %Al, 0.053 %Fe, 0.180 %Si, $48.71, spread = 23
+ 6 [28 12 32 ] 99.358 %Al, 0.096 %Fe, 0.348 %Si, $44.53, spread = 20
+ 7 [18  3 42 ] 99.760 %Al, 0.040 %Fe, 0.139 %Si, $57.35, spread = 39
+ 8 [19 41 20 ] 99.262 %Al, 0.212 %Fe, 0.249 %Si, $41.53, spread = 22
+ 9 [11 25  5 ] 99.353 %Al, 0.185 %Fe, 0.325 %Si, $44.53, spread = 20
+10 [ 9  6 21 ] 99.504 %Al, 0.139 %Fe, 0.253 %Si, $48.71, spread = 15
+11 [ 7 36 26 ] 99.506 %Al, 0.098 %Fe, 0.268 %Si, $48.71, spread = 29
+12 [47 39  2 ] 99.503 %Al, 0.114 %Fe, 0.270 %Si, $48.71, spread = 45
+13 [22 33 10 ] 99.356 %Al, 0.187 %Fe, 0.219 %Si, $44.53, spread = 23
+14 [34 29 38 ] 99.361 %Al, 0.209 %Fe, 0.241 %Si, $44.53, spread =  9
+15 [14 43 49 ] 99.254 %Al, 0.224 %Fe, 0.307 %Si, $41.53, spread = 35
+16 [ 1 35 31 ] 99.350 %Al, 0.075 %Fe, 0.336 %Si, $44.53, spread = 34
+17 [48 44 16 ] 99.515 %Al, 0.143 %Fe, 0.241 %Si, $48.71, spread = 32
+                                          Sum = $787.09, MxSprd = 45
+\end{verbatim}
+Best solution found using repeated steepest ascents with $n=200$
+\begin{verbatim}
+ 1 [ 1 48 15 ] 99.256 %Al, 0.121 %Fe, 0.300 %Si, $41.53, spread = 47
+ 2 [29 36 10 ] 99.369 %Al, 0.216 %Fe, 0.272 %Si, $44.53, spread = 26
+ 3 [33  6 34 ] 99.268 %Al, 0.253 %Fe, 0.272 %Si, $41.53, spread = 28
+ 4 [42 16 49 ] 99.502 %Al, 0.161 %Fe, 0.163 %Si, $48.71, spread = 33
+ 5 [43 24 39 ] 99.508 %Al, 0.067 %Fe, 0.243 %Si, $48.71, spread = 19
+ 6 [47  8  5 ] 99.366 %Al, 0.188 %Fe, 0.317 %Si, $44.53, spread = 42
+ 7 [ 4 26 19 ] 99.253 %Al, 0.243 %Fe, 0.283 %Si, $41.53, spread = 22
+ 8 [31 28 46 ] 99.365 %Al, 0.139 %Fe, 0.196 %Si, $44.53, spread = 18
+ 9 [ 3 11 23 ] 99.502 %Al, 0.058 %Fe, 0.246 %Si, $48.71, spread = 20
+10 [32 27 35 ] 99.501 %Al, 0.087 %Fe, 0.224 %Si, $48.71, spread =  8
+11 [22 40 51 ] 99.353 %Al, 0.122 %Fe, 0.349 %Si, $44.53, spread = 29
+12 [13 38  2 ] 99.504 %Al, 0.177 %Fe, 0.160 %Si, $48.71, spread = 36
+13 [50 25 37 ] 99.500 %Al, 0.188 %Fe, 0.231 %Si, $48.71, spread = 25
+14 [20 30 17 ] 99.522 %Al, 0.111 %Fe, 0.277 %Si, $48.71, spread = 13
+15 [ 9 18 44 ] 99.750 %Al, 0.037 %Fe, 0.099 %Si, $57.35, spread = 35
+16 [45 41 12 ] 99.258 %Al, 0.171 %Fe, 0.284 %Si, $41.53, spread = 33
+17 [21  7 14 ] 99.360 %Al, 0.168 %Fe, 0.347 %Si, $44.53, spread = 14
+                                          Sum = $787.09, MxSprd = 47
+\end{verbatim}
+
+\section{Quesion 4}
+
+\section{Question 5}
+(a) You would expect the problem's objective function to have lots of 
+plateus because the objective function is not continuous. This means
+there will be lots of cases where two pots are swapped and the
+quality, and thus value, will remain constant.
+
+(b) 
+
+\section{Question 6}
+$$g''(\overline{Al}, \overline{Fe}, \overline{Si}, x_{c1}, x_{c2}, 
+x_{c3}, s) =
+\begin{cases}
+    g(\overline{Al}, \overline{Fe}, \overline{Si}) - 10000*(s_c - s) & \text{if } s_c > s \\
+    g(\overline{Al}, \overline{Fe}, \overline{Si}) \text{otherwise}
+\end{cases}$$ where
+$s_c = \text{max}(x_{c1}, x_{c2}, x_{c3}) - \text{min}(x_{c1}, x_{c2}, x_{c3})$
+
+
+
+
+
+\end{document}

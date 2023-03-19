@@ -1,0 +1,564 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022/Arch Linux) (preloaded format=pdflatex 2023.3.18)  19 MAR 2023 14:00
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**report.tex
+(./report.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-04-10>
+(/usr/share/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(/usr/share/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+)
+(/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+
+(/usr/share/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(/usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen139
+\Gin@req@width=\dimen140
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2021/10/15 v2.17l AMS math features
+\@mathmargin=\skip49
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+
+(/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen141
+))
+(/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen142
+)
+(/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2021/08/26 v2.02 operator names
+)
+\inf@bad=\count193
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count194
+\leftroot@=\count195
+LaTeX Info: Redefining \overline on input line 399.
+\classnum@=\count196
+\DOTSCASE@=\count197
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box50
+\strutbox@=\box51
+\big@size=\dimen143
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count198
+\c@MaxMatrixCols=\count199
+\dotsspace@=\muskip16
+\c@parentequation=\count266
+\dspbrk@lvl=\count267
+\tag@help=\toks18
+\row@=\count268
+\column@=\count269
+\maxfields@=\count270
+\andhelp@=\toks19
+\eqnshift@=\dimen144
+\alignsep@=\dimen145
+\tagshift@=\dimen146
+\tagwidth@=\dimen147
+\totwidth@=\dimen148
+\lineht@=\dimen149
+\@envbody=\toks20
+\multlinegap=\skip50
+\multlinetaggap=\skip51
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2938.
+LaTeX Info: Redefining \] on input line 2939.
+)
+(/usr/share/texmf-dist/tex/latex/algorithms/algorithm.sty
+Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
+nment
+
+(/usr/share/texmf-dist/tex/latex/float/float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count271
+\float@exts=\toks22
+\float@box=\box52
+\@float@everytoks=\toks23
+\@floatcapt=\box53
+)
+(/usr/share/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+)
+\@float@every@algorithm=\toks24
+\c@algorithm=\count272
+)
+(/usr/share/texmf-dist/tex/latex/algorithms/algorithmic.sty
+Package: algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+\c@ALC@unique=\count273
+\c@ALC@line=\count274
+\c@ALC@rem=\count275
+\c@ALC@depth=\count276
+\ALC@tlm=\skip52
+\algorithmicindent=\skip53
+)
+(/usr/share/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count277
+\lst@gtempboxa=\box54
+\lst@token=\toks25
+\lst@length=\count278
+\lst@currlwidth=\dimen150
+\lst@column=\count279
+\lst@pos=\count280
+\lst@lostspace=\dimen151
+\lst@width=\dimen152
+\lst@newlines=\count281
+\lst@lineno=\count282
+\lst@maxwidth=\dimen153
+
+(/usr/share/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
+\c@lstnumber=\count283
+\lst@skipnumbers=\count284
+\lst@framebox=\box55
+)
+(/usr/share/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2020/03/24 1.8d listings configuration
+))
+Package: listings 2020/03/24 1.8d (Carsten Heinz)
+
+(/usr/share/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2022-04-14 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count285
+\l__pdf_internal_box=\box56
+) (./report.aux)
+\openout1 = `report.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 12.
+LaTeX Font Info:    ... okay on input line 12.
+(/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count286
+\scratchdimen=\dimen154
+\scratchbox=\box57
+\nofMPsegments=\count287
+\nofMParguments=\count288
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count289
+\MPscratchDim=\dimen155
+\MPnumerator=\count290
+\makeMPintoPDFobject=\count291
+\everyMPtoPDFconversion=\toks27
+) (/usr/share/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+))
+\c@lstlisting=\count292
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 1 [13  4 26 ] 99.253 %Al, 0.210 %Fe, 0.373 %Si, $41.53, spr
+ead = 22[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 2 [31 46 17 ] 99.500 %Al, 0.135 %Fe, 0.144 %Si, $48.71, spr
+ead = 29[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 3 [49 14 29 ] 99.251 %Al, 0.207 %Fe, 0.314 %Si, $41.53, spr
+ead = 35[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 4 [23 27 30 ] 99.505 %Al, 0.105 %Fe, 0.199 %Si, $48.71, spr
+ead =  7[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 5 [20 50 10 ] 99.351 %Al, 0.220 %Fe, 0.327 %Si, $44.53, spr
+ead = 40[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 6 [ 8 34 19 ] 99.353 %Al, 0.244 %Fe, 0.155 %Si, $44.53, spr
+ead = 26[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 7 [ 1 48 24 ] 99.355 %Al, 0.069 %Fe, 0.342 %Si, $44.53, spr
+ead = 47[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 8 [32  6  2 ] 99.500 %Al, 0.146 %Fe, 0.227 %Si, $48.71, spr
+ead = 30[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[] \OT1/cmtt/m/n/10 9 [40 36  7 ] 99.501 %Al, 0.169 %Fe, 0.121 %Si, $48.71, spr
+ead = 33[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 10 [28 25 43 ] 99.252 %Al, 0.218 %Fe, 0.369 %Si, $41.53, spr
+ead = 18[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 11 [21 45 16 ] 99.357 %Al, 0.199 %Fe, 0.232 %Si, $44.53, spr
+ead = 29[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 12 [ 9 47 39 ] 99.501 %Al, 0.095 %Fe, 0.228 %Si, $48.71, spr
+ead = 38[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 13 [37 35 11 ] 99.501 %Al, 0.067 %Fe, 0.277 %Si, $48.71, spr
+ead = 26[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 14 [22 15  3 ] 99.500 %Al, 0.089 %Fe, 0.165 %Si, $48.71, spr
+ead = 19[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 15 [18 42 44 ] 99.750 %Al, 0.044 %Fe, 0.136 %Si, $57.35, spr
+ead = 26[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 16 [51  5 38 ] 99.351 %Al, 0.192 %Fe, 0.349 %Si, $44.53, spr
+ead = 46[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]\OT1/cmtt/m/n/10 17 [41 33 12 ] 99.353 %Al, 0.099 %Fe, 0.305 %Si, $44.53, spr
+ead = 29[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 36--36
+[]                                          \OT1/cmtt/m/n/10 Sum = $790.09, MxS
+prd = 47[] 
+ []
+
+
+Overfull \hbox (9.76031pt too wide) detected at line 56
+\OT1/cmr/bx/n/10 y\OT1/cmr/m/n/10 (\OT1/cmr/bx/n/10 x\OML/cmm/m/it/10 ; k; l; m
+; n\OT1/cmr/m/n/10 ) = (\OML/cmm/m/it/10 y[]; y[]; y[]\OT1/cmr/m/n/10 ; \OML/cm
+m/m/it/10 y[]y[]y[]\OT1/cmr/m/n/10 ; \OML/cmm/m/it/10 :::y[]\OT1/cmr/m/n/10 )\O
+ML/cmm/m/it/10 ; y[] \OT1/cmr/m/n/10 = []
+ []
+
+[1
+
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 1 [27  4 45 ] 99.261 %Al, 0.274 %Fe, 0.110 %Si, $41.53, spr
+ead = 41[] 
+ []
+
+[2]
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 2 [ 8 13 37 ] 99.508 %Al, 0.154 %Fe, 0.153 %Si, $48.71, spr
+ead = 29[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 3 [50 40 30 ] 99.504 %Al, 0.143 %Fe, 0.238 %Si, $48.71, spr
+ead = 20[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 4 [17 51 15 ] 99.268 %Al, 0.162 %Fe, 0.386 %Si, $41.53, spr
+ead = 36[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 5 [24 23 46 ] 99.512 %Al, 0.053 %Fe, 0.180 %Si, $48.71, spr
+ead = 23[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 6 [28 12 32 ] 99.358 %Al, 0.096 %Fe, 0.348 %Si, $44.53, spr
+ead = 20[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 7 [18  3 42 ] 99.760 %Al, 0.040 %Fe, 0.139 %Si, $57.35, spr
+ead = 39[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 8 [19 41 20 ] 99.262 %Al, 0.212 %Fe, 0.249 %Si, $41.53, spr
+ead = 22[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[] \OT1/cmtt/m/n/10 9 [11 25  5 ] 99.353 %Al, 0.185 %Fe, 0.325 %Si, $44.53, spr
+ead = 20[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 10 [ 9  6 21 ] 99.504 %Al, 0.139 %Fe, 0.253 %Si, $48.71, spr
+ead = 15[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 11 [ 7 36 26 ] 99.506 %Al, 0.098 %Fe, 0.268 %Si, $48.71, spr
+ead = 29[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 12 [47 39  2 ] 99.503 %Al, 0.114 %Fe, 0.270 %Si, $48.71, spr
+ead = 45[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 13 [22 33 10 ] 99.356 %Al, 0.187 %Fe, 0.219 %Si, $44.53, spr
+ead = 23[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 14 [34 29 38 ] 99.361 %Al, 0.209 %Fe, 0.241 %Si, $44.53, spr
+ead =  9[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 15 [14 43 49 ] 99.254 %Al, 0.224 %Fe, 0.307 %Si, $41.53, spr
+ead = 35[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 16 [ 1 35 31 ] 99.350 %Al, 0.075 %Fe, 0.336 %Si, $44.53, spr
+ead = 34[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]\OT1/cmtt/m/n/10 17 [48 44 16 ] 99.515 %Al, 0.143 %Fe, 0.241 %Si, $48.71, spr
+ead = 32[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 107--107
+[]                                          \OT1/cmtt/m/n/10 Sum = $787.09, MxS
+prd = 45[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 1 [ 1 48 15 ] 99.256 %Al, 0.121 %Fe, 0.300 %Si, $41.53, spr
+ead = 47[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 2 [29 36 10 ] 99.369 %Al, 0.216 %Fe, 0.272 %Si, $44.53, spr
+ead = 26[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 3 [33  6 34 ] 99.268 %Al, 0.253 %Fe, 0.272 %Si, $41.53, spr
+ead = 28[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 4 [42 16 49 ] 99.502 %Al, 0.161 %Fe, 0.163 %Si, $48.71, spr
+ead = 33[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 5 [43 24 39 ] 99.508 %Al, 0.067 %Fe, 0.243 %Si, $48.71, spr
+ead = 19[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 6 [47  8  5 ] 99.366 %Al, 0.188 %Fe, 0.317 %Si, $44.53, spr
+ead = 42[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 7 [ 4 26 19 ] 99.253 %Al, 0.243 %Fe, 0.283 %Si, $41.53, spr
+ead = 22[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 8 [31 28 46 ] 99.365 %Al, 0.139 %Fe, 0.196 %Si, $44.53, spr
+ead = 18[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[] \OT1/cmtt/m/n/10 9 [ 3 11 23 ] 99.502 %Al, 0.058 %Fe, 0.246 %Si, $48.71, spr
+ead = 20[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 10 [32 27 35 ] 99.501 %Al, 0.087 %Fe, 0.224 %Si, $48.71, spr
+ead =  8[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 11 [22 40 51 ] 99.353 %Al, 0.122 %Fe, 0.349 %Si, $44.53, spr
+ead = 29[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 12 [13 38  2 ] 99.504 %Al, 0.177 %Fe, 0.160 %Si, $48.71, spr
+ead = 36[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 13 [50 25 37 ] 99.500 %Al, 0.188 %Fe, 0.231 %Si, $48.71, spr
+ead = 25[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 14 [20 30 17 ] 99.522 %Al, 0.111 %Fe, 0.277 %Si, $48.71, spr
+ead = 13[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 15 [ 9 18 44 ] 99.750 %Al, 0.037 %Fe, 0.099 %Si, $57.35, spr
+ead = 35[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 16 [45 41 12 ] 99.258 %Al, 0.171 %Fe, 0.284 %Si, $41.53, spr
+ead = 33[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]\OT1/cmtt/m/n/10 17 [21  7 14 ] 99.360 %Al, 0.168 %Fe, 0.347 %Si, $44.53, spr
+ead = 14[] 
+ []
+
+
+Overfull \hbox (11.99689pt too wide) in paragraph at lines 128--128
+[]                                          \OT1/cmtt/m/n/10 Sum = $787.09, MxS
+prd = 47[] 
+ []
+
+[3] [4] (./report.aux) ) 
+Here is how much of TeX's memory you used:
+ 3704 strings out of 478238
+ 55371 string characters out of 5850456
+ 363315 words of memory out of 5000000
+ 21933 multiletter control sequences out of 15000+600000
+ 475429 words of font info for 50 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 55i,9n,62p,224b,503s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mbx10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
+r/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pf
+b></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
+10.pfb>
+Output written on report.pdf (4 pages, 143407 bytes).
+PDF statistics:
+ 77 PDF objects out of 1000 (max. 8388607)
+ 46 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+

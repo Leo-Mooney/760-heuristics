@@ -64,6 +64,18 @@ double grade_max_Fe[11] = {5.00, 0.81, 0.81, 0.79, 0.76, 0.72, 0.53, 0.50, 0.46,
 double grade_max_Si[11] = {3.00, 0.40, 0.41, 0.43, 0.39, 0.35, 0.28, 0.28, 0.21, 0.15, 0.15};
 double grade_value[11] =  {10.00,21.25,26.95,36.25,41.53,44.53,48.71,52.44,57.35,68.21,72.56};
 
+double average(const int x[17][3], const int i, const int e){
+  return (pots[x[i][0]][e] + pots[x[i][1]][e] + pots[x[i][2]][e])/3;
+}
+
+int max(const int a, const int b, const int c) {
+  return (a > b) ? ((a > c) ? a : c) : ((b > c) ? b : c);
+}
+
+int min(const int a, const int b, const int c) {
+  return (a < b) ? ((a < c) ? a : c) : ((b < c) ? b : c);
+}
+
 double f(const int *crucible, const bool mod) {
   double k = 20;
   double quality[3];
@@ -77,6 +89,7 @@ double f(const int *crucible, const bool mod) {
     double min = (al < fe) ? ((al < si) ? al : si) : ((fe < si) ? fe : si);
     spread[i] = max - min;
   }
+
   double tol = 0.00001;
   double a = 0;
   double b = 0;
@@ -111,6 +124,23 @@ double f(const int *crucible, const bool mod) {
   return 0;
 }
 
+double f_spread(const int *crucible, const int max_spread) {
+  double k = 20;
+  double quality[3];
+  for(int i=0;i<3;i++){
+    quality[i] = (pots[crucible[0]][i] + pots[crucible[1]][i] + pots[crucible[2]][i])/3;
+  }
+
+  double tol = 0.00001;
+  int spread = max(crucible[0], crucible[1], crucible[2]) - min(crucible[0], crucible[1], crucible[2]);
+  double spread_penalty = (spread > max_spread) ? -10000*(spread-max_spread) : 0;
+  for(int i=10;i>=0;i--){
+    if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) { 
+      return grade_value[i] + spread_penalty;
+    } 
+  }  
+  return 0;
+}
 double calc_obj(const int x[17][3]) {
   double total = 0;
   for(int i=0; i<17; i++){
@@ -119,14 +149,48 @@ double calc_obj(const int x[17][3]) {
   return total;
 }
 
+double calc_obj_spread(const int x[17][3], const int max_spread) {
+  double total = 0;
+  for(int i=0; i<17; i++){
+    total += f_spread(x[i], max_spread);
+  }
+  return total;
+}
+
 void print_sol(const int x[17][3]) {
+  int MxSprd = 0;
   for(int i=0;i<17;i++){
+    printf(" %d [", i+1);
     for(int j=0;j<3;j++){
-      printf("%d,", x[i][j]);
+      printf("%d,", x[i][j]+1);
     }
-    printf("val: %f", f(x[i], false));
+    int spread = max(x[i][0], x[i][1], x[i][2]) - min(x[i][0], x[i][1], x[i][2]);
+    MxSprd = (spread > MxSprd) ? spread : MxSprd;
+    double al = average(x, i, 0);
+    double fe = average(x, i, 1);
+    double si = average(x, i, 2);
+    printf("] %.3f %%Al, %.3f %%Fe, %.3f %%Si, $%.2f, spread=%d", al, fe, si, f(x[i], false), spread);
     printf("\n");
   }
+  printf("Sum = $%.3f, MxSprd = %d", calc_obj(x), MxSprd);
+}
+
+void print_sol_spread(const int x[17][3], const int max_spread) {
+  int MxSprd = 0;
+  for(int i=0;i<17;i++){
+    printf(" %d [", i+1);
+    for(int j=0;j<3;j++){
+      printf("%d,", x[i][j]+1);
+    }
+    int spread = max(x[i][0], x[i][1], x[i][2]) - min(x[i][0], x[i][1], x[i][2]);
+    MxSprd = (spread > MxSprd) ? spread : MxSprd;
+    double al = average(x, i, 0);
+    double fe = average(x, i, 1);
+    double si = average(x, i, 2);
+    printf(" ] %.3f %%Al, %.3f %%Fe, %.3f %%Si, $%.2f, spread=%d", al, fe, si, f_spread(x[i], spread), spread);
+    printf("\n");
+  }
+  printf("Sum = $%.3f, MxSprd = %d", calc_obj_spread(x, max_spread), MxSprd);
 }
 
 void next_ascent(int x[17][3]){
@@ -241,6 +305,73 @@ void simulated_annealing(int x[17][3], double c1, double alpha, int ck_update_ra
   // printf("BEST: %f", best);
 }
 
+void simulated_annealing_spread(int x[17][3], double c1, double alpha, int ck_update_rate, const int max_spread) {
+  double ck = c1;
+  double best = 0;
+  unsigned long iter = 0;
+  unsigned long accepted = 0;
+  int delta_over_0 = 0;
+  int last_accepted = 100000;
+
+  double last_crucible_values[17];
+  for(int i=0;i<17;i++){
+    last_crucible_values[i] = f_spread(x[i], max_spread);
+  }
+  srand(rand());
+  while(ck>0.0001){
+    int k = rand() % 17;
+    int l = rand() % 17;
+    int m = rand() % 3;
+    int n = rand() % 3;
+    while(l==k){
+      l = rand() % 17;
+    }
+
+    double swap = x[k][m];
+    x[k][m] = x[l][n];
+    x[l][n] = swap;
+    
+    double f_k = f_spread(x[k], max_spread);
+    double f_l = f_spread(x[l], max_spread);
+
+    double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
+    if(delta>0.0001){
+      delta_over_0+=1;
+    } 
+
+    if(delta>0.001 || (double)rand() / (double)RAND_MAX < exp(delta/ck)){
+      // double obj = calc_obj(x);
+      // best = obj > best ? obj : best; 
+      last_crucible_values[k] = f_k;
+      last_crucible_values[l] = f_l;
+      accepted++;
+    }
+    else {
+      // swap back
+      x[l][n] = x[k][m];
+      x[k][m] = swap;
+    }
+    
+    if(iter%10000000 == 0 && iter != 0){
+      // printf("%f, %f, %f, %f, %f", f_k, f_l, last_crucible_values[k], last_crucible_values[l], delta);
+      // printf("Iterations: %lu\n", iter);
+      printf("Accepted rate (\%): %f\n", 100*(double)accepted/(double)10000000); 
+      printf("Ck: %0.15f\n", ck); 
+      printf("Obj: %f\n", calc_obj_spread(x, max_spread));
+      printf("Iter: %lu\n", iter);
+      // printf("Delta Over 0: %d\n", delta_over_0);
+      last_accepted = accepted;
+      accepted=0;
+    }
+    
+    if(iter%ck_update_rate==0){
+      ck = ck*alpha;
+    }
+    iter++; 
+  }
+  // printf("BEST: %f", best);
+}
+
 void generate_random_x(int x[17][3]) {
   int x_flat[51];
   for(int i=0;i<51;i++){
@@ -266,21 +397,10 @@ int main() {
   srand(time(NULL));
   int x[17][3];
 
-  double best = 0;
-  for(int i=0;i<10000000;i++){
-    generate_random_x(x);
-    next_ascent(x);
-    double obj = calc_obj(x);
-    best = obj > best ? obj : best;
-    if(i%100 == 0) {
-      printf("%d, %f\n", i, best);
-    }
-  }
-  printf("Best: %f\n", best);
-
-  // generate_random_x(x);
-  // simulated_annealing(x, 100, 0.99999999, 1);
-  // print_sol(x);
-  printf("Obj Found: %f", calc_obj(x));
+  int max_spread = 6;
+  generate_random_x(x);
+  simulated_annealing_spread(x, 100, 0.999999999, 1, max_spread);
+  print_sol_spread(x, max_spread);
   return 0;
 }
+
