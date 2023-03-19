@@ -4,6 +4,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{listings}
+\usepackage{pdfpages}
 
 \title{760-Heuristics-Assignment}
 \author{Leo Mooney}
@@ -57,7 +58,8 @@ See Appendix A for plot.
 \subsection{Question 3D}
 See Appendix A for plot.
 \subsection{Question 3E}
-See Appendix A for code and plots. Best solution found using repeated next ascents with $n=200$
+See Appendix A for code and plots. Best solution found using repeated 
+next ascents with $n=200$.
 \begin{verbatim}
  1 [27  4 45 ] 99.261 %Al, 0.274 %Fe, 0.110 %Si, $41.53, spread = 41
  2 [ 8 13 37 ] 99.508 %Al, 0.154 %Fe, 0.153 %Si, $48.71, spread = 29
@@ -78,7 +80,7 @@ See Appendix A for code and plots. Best solution found using repeated next ascen
 17 [48 44 16 ] 99.515 %Al, 0.143 %Fe, 0.241 %Si, $48.71, spread = 32
                                           Sum = $787.09, MxSprd = 45
 \end{verbatim}
-Best solution found using repeated steepest ascents with $n=200$
+Best solution found using repeated steepest ascents with $n=200$.
 \begin{verbatim}
  1 [ 1 48 15 ] 99.256 %Al, 0.121 %Fe, 0.300 %Si, $41.53, spread = 47
  2 [29 36 10 ] 99.369 %Al, 0.216 %Fe, 0.272 %Si, $44.53, spread = 26
@@ -113,7 +115,7 @@ plateus because the objective function is not continuous. This means
 there will be lots of cases where two pots are swapped and the
 quality, and thus value, will remain constant.
 
-(b) 
+\noindent (b) 
 
 \section{Question 6}
 $$g''(\overline{Al}, \overline{Fe}, \overline{Si}, x_{c1}, x_{c2}, 
@@ -195,7 +197,7 @@ See Appendix A for code.
 
 
 \section{My Best Solutions}
-These were found by using simulated annealing in C.
+These were found by using standard simulated annealing in C.
 
 \subsection{No Max Spread}
 \begin{verbatim}
@@ -282,6 +284,14 @@ Sum = $784.00, MxSprd = 8
  17 [7,2,5,] 99.505 %Al, 0.182 %Fe, 0.208 %Si, $48.71, spread=5
 Sum = $785.63, MxSprd = 11
 \end{verbatim}
+
+\section{Appendix A}
+See overleaf
+
+\includepdf[landscape=true,pages=-]{./assets/next_ascent_chart.pdf}
+\includepdf[landscape=true,pages=-]{./assets/steepest_ascent_chart.pdf}
+\includepdf[landscape=true,pages=-]{./assets/repeated_next_ascents_chart.pdf}
+\includepdf[landscape=true,pages=-]{./assets/repeated_steepest_ascents_chart.pdf}
 
 
 \end{document}
