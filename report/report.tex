@@ -44,10 +44,10 @@ $\overline{Si}[x_{c,avg}] = \displaystyle\frac{Si[x_{c,1}], Si[x_{c,2}], Si[x_{c
   \STATE Let $x$, $x \in S$, be some initial configuration
   \STATE Let $x^*$ be some configuration that maximizes f(x)
   \STATE Let $I$ be the intermediate values\\
-  \STATE $I_c := h(x_c)$
+  \STATE $I_i := h(x_i) \forall i \in c$ 
   \WHILE {not stopped}
     \STATE Compare each neighbor $y(x, k, l, m, n) \in  N(x)$
-    \STATE $d = h(y_k) + h(y_k) - I_k - I_l$
+    \STATE Let $d = h(y_k) + h(y_k) - I_k - I_l$
     \IF {$d > 0$ for some $y \in N(x)$}
       \STATE x := y
       \STATE $I_k := h(y_k)$ 
@@ -119,9 +119,86 @@ limited information so it not conclusive evidence.
 (a) You would expect the problem's objective function to have lots of 
 plateus because the objective function is not continuous. This means
 there will be lots of cases where two pots are swapped and the
-quality, and thus value, will remain constant.
+quality, and thus value, will remain constant.\\\\
 
-\noindent (b) 
+\noindent (b) One function that could add a slope to plateus is to 
+give a slightly higher objective value when the means of the elements in the pot
+are further away from their worst quality. The maximum distance from the
+worst quality should be the best quality, as there should be no incentive
+to improve on a quality that results in the highest grade. The gradient 
+at which a higher objective value is given should be lower for
+aluminium than iron or silicon as the distance between the worst mean
+quality for aluminium is greater than that of the other two. This can 
+be described by the following definition.
+\[
+  g'(\overline{Al},\overline{Fe},\overline{Si}) = 
+  g(\overline{Al},\overline{Fe},\overline{Si}) + a(\overline{Al}) +
+  b(\overline{Fe}) + c(\overline{Si})
+\]
+Where
+\[
+  a(\overline{Al}) = 
+  \begin{cases}
+    0.1*(\overline{Al} - 99.1) & \text{if } \overline{Al} \le 99.9)\\
+    0 & \text{otherwise}
+  \end{cases}
+\]
+\[
+  b(\overline{Fe}) = 
+  \begin{cases}
+    0.09 - \overline{Fe} & \text{if } \overline{Fe} \ge 0.03)\\
+    0 & \text{otherwise}
+  \end{cases}
+\]
+\[
+  c(\overline{Si}) = 
+  \begin{cases}
+    0.09 - \overline{Si} & \text{if } \overline{Si} \ge 0.01)\\
+    0 & \text{otherwise}
+  \end{cases}
+\]
+Consider a crucible with the properties. Note the specific properties
+of these pots are not consistent with those provided as it is just an
+example of a possible configuration.
+
+\begin{table}
+\centering
+\begin{tabular}{ |c|c|c|c| }
+  \hline
+  Pot Number & Al & Fe & Si\\
+  \hline
+  1 & 99.23 & 0.063 & 0.054\\
+  \hline
+  2 & 99.23 & 0.063 & 0.054\\
+  \hline
+  3 & 99.23 & 0.063 & 0.054\\
+  \hline
+  Average Quality & 3 & 3 & 3\\
+  \hline
+\end{tabular}
+  \label{tab:Crucible from x}
+\end{table}
+
+\begin{table}
+\centering
+\begin{tabular}{ |c|c|c|c| }
+  \hline
+  Pot Number & Al & Fe & Si\\
+  \hline
+  1 & 99.23 & 0.063 & 0.054\\
+  \hline
+  2 & 99.23 & 0.063 & 0.054\\
+  \hline
+  3 & 99.23 & 0.063 & 0.054\\
+  \hline
+  Average Quality & 3 & 3 & 3\\
+  \hline
+\end{tabular}
+  \label{tab:Crucible from y}
+\end{table}
+
+
+
 
 \section{Question 6}
 $$g''(\overline{Al}, \overline{Fe}, \overline{Si}, x_{c1}, x_{c2}, 
