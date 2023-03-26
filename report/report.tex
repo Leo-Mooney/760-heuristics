@@ -129,8 +129,8 @@ The proposed function will add a non-linear gradient to the existing
 value function to encourage sitting on the grade boundary. This 
 non-linear gradient will take the form of a quadratic with a local
 minimum at the current grade boundary. The maximum value this
-quadratic will take will be 1 and the minimum 0. This can be formally
-defined as follows
+quadratic will take will be 1 at the next grade boundary and the 
+minimum 0. This can be formally defined as follows
 
 \[
   g'(\overline{Al}, \overline{Fe}, \overline{Si}) = 
@@ -151,27 +151,32 @@ further encouraged than those who are far away from the next grade
 boundary. \\
 
 Let us consider a simplified example where the crucible only has one 
-property, $Al$. If $Al > 95$ then the value is $10. If $A > 97$ then the
-value is $20. Now let us consider solution x with two crucibles 
+property, $Al$. If $Al > 95$ then the value is \$10. If $Al > 97$ then the
+value is \$20. Now let us consider solution x with two crucibles 
 $x_k, x_l$, and a neighbor y with two crucibles $y_k, y_l$. \\
-$Al[x_{k,1}]=95.3,Al[x_{k,2}]=95.2,Al[x_{k,3}]=96.5,\overline{Al}[k]=95.67$\\
-$Al[x_{l,1}]=96.8,Al[x_{l,2}]=96.9,Al[x_{l,3}]=95.4\overline{Al}[k]=96.37$\\
-
-$Al[y_{k,1}]=95.3,Al[y_{k,2}]=95.2,Al[y_{k,3}]=95.4,\overline{Al}[k]=95.30$\\
-$Al[y_{l,1}]=96.8,Al[y_{l,2}]=96.9,Al[y_{l,3}]=96.5\overline{Al}[k]=96.73$\\
+$Al[x_{k,1}]=95.3,Al[x_{k,2}]=95.2,Al[x_{k,3}]=96.5,\overline{Al}[x_k]=95.67$\\
+$Al[x_{l,1}]=96.8,Al[x_{l,2}]=96.9,Al[x_{l,3}]=95.4,\overline{Al}[x_l]=96.37$\\
+$Al[y_{k,1}]=95.3,Al[y_{k,2}]=95.2,Al[y_{k,3}]=95.4,\overline{Al}[y_k]=95.30$\\
+$Al[y_{l,1}]=96.8,Al[y_{l,2}]=96.9,Al[y_{l,3}]=96.5,\overline{Al}[y_l]=96.73$\\
 
 In this example using the original grading function there would be no
 difference between the objective value for $x$ and $y$ so the neighbor
 would not be accepted in standard next/steepest ascent. However, 
 accepting the new solution would likely allow a better solution to be 
-found, as crucible $l$ is closer to the $97 boundary while $l$ while
-$k$ is closer to the 
+found, as crucible $l$ is closer to the \$97 boundary while
+$k$ is closer to the \$95 boundary, which it will not drop below without
+good reason due to the sharp change in grading function $g()$ at this
+boundary.\\
 
-
-
-
-
-
+Using the modified $g'()$ The crucible values are as follows\\
+$x_k = \$10.112225$ 
+$x_l = \$10.469225$ 
+$y_k = \$10.022500$ 
+$y_l = \$10.748225$ \\
+This results in a change of objective value of 0.189275, meaning the
+better solution will be accepted. The greatest magnitude this gradient
+value can take is 1, as it is stil desirable to have a steep gradient
+change when changing grades. 
 
 \section{Question 6}
 $$g''(\overline{Al}, \overline{Fe}, \overline{Si}, x_{c1}, x_{c2}, 
