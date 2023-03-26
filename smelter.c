@@ -244,7 +244,7 @@ void next_ascent(int x[17][3]){
             double f_l = f_mod(x[l]);
 
             double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
-            if(delta>0.001){
+            if(delta>0.00001){
               last_crucible_values[k] = f_k;
               last_crucible_values[l] = f_l;
               o_k = k;
@@ -468,27 +468,46 @@ int main() {
   srand(time(NULL));
   int x[17][3];
 
-  // int max_spread = 6;
+  int max_spread = 8;
+  double best_obj = 0;
+  int best_x[17][3];
+  for(int i=0;i<500000; i++){
+    generate_random_x(x);
+    next_ascent_spread(x, max_spread);
+    double obj = calc_obj_spread(x, max_spread);
+    if(obj > best_obj){
+      best_obj = obj > best_obj ? obj : best_obj;
+      memcpy(best_x, x, sizeof(best_x));
+    }
+    if(i%1000==0){
+      printf("%f : %f\n", best_obj, (double)i/(double)500000);
+    }
+  }
+  print_sol_spread(best_x, max_spread);
+  printf("%f", best_obj);
+  //
+  //
   // double best_obj = 0;
   // int best_x[17][3];
   // for(int i=0;i<500000; i++){
   //   generate_random_x(x);
-  //   next_ascent_spread(x, max_spread);
-  //   double obj = calc_obj_spread(x, max_spread);
+  //   next_ascent(x);
+  //   double obj = calc_obj(x);
   //   if(obj > best_obj){
   //     best_obj = obj > best_obj ? obj : best_obj;
   //     memcpy(best_x, x, sizeof(best_x));
   //   }
   //   if(i%1000==0){
-  //     printf("%f\n", best_obj);
+  //     printf("%f : %f\n", best_obj, (double)i/(double)500000);
   //   }
   // }
-  // print_sol_spread(best_x, max_spread);
+  // print_sol(best_x);
   // printf("%f", best_obj);
-  generate_random_x(x);
-  simulated_annealing(x, 100, 0.99999999, 1);
+  //
+  // generate_random_x(x);
+  // simulated_annealing(x, 100, 0.99999999, 1);
   // simulated_annealing_spread(x, 100, 0.999999999, 1, max_spread);
-  print_sol(x);
+  // print_sol(x);
   return 0;
 }
 

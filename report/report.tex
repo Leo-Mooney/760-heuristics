@@ -176,7 +176,11 @@ $y_l = \$10.748225$ \\
 This results in a change of objective value of 0.189275, meaning the
 better solution will be accepted. The greatest magnitude this gradient
 value can take is 1, as it is stil desirable to have a steep gradient
-change when changing grades. 
+change when changing grades. \\
+
+\textit{Note: This new objective function with next ascent ended up
+working better than simulated annealing and was used for find my best
+solutions.}
 
 \section{Question 6}
 $$g''(\overline{Al}, \overline{Fe}, \overline{Si}, x_{c1}, x_{c2}, 
@@ -260,28 +264,29 @@ See Appendix A for code.
 \section{My Best Solutions}
 These were found by using my modified objective function from Q5 in C
 with next ascent. This gave slightly better results than simulated
-annealing in C.
+annealing in C. I am happy to provide the code if required for the 
+competition, just email me.
 
 \subsection{No Max Spread}
 \begin{verbatim}
- 1 [35,23,19,] 99.356 %Al, 0.172 %Fe, 0.239 %Si, $44.53, spread=16
- 2 [5,49,26,] 99.351 %Al, 0.188 %Fe, 0.316 %Si, $44.53, spread=44
- 3 [6,43,7,] 99.350 %Al, 0.235 %Fe, 0.300 %Si, $44.53, spread=37
- 4 [24,33,1,] 99.350 %Al, 0.056 %Fe, 0.283 %Si, $44.53, spread=32
- 5 [12,48,45,] 99.352 %Al, 0.166 %Fe, 0.235 %Si, $44.53, spread=36
- 6 [13,39,37,] 99.500 %Al, 0.154 %Fe, 0.170 %Si, $48.71, spread=26
- 7 [17,20,34,] 99.351 %Al, 0.201 %Fe, 0.308 %Si, $44.53, spread=17
- 8 [29,38,41,] 99.355 %Al, 0.154 %Fe, 0.261 %Si, $44.53, spread=12
- 9 [11,2,16,] 99.500 %Al, 0.087 %Fe, 0.272 %Si, $48.71, spread=14
- 10 [47,3,15,] 99.351 %Al, 0.172 %Fe, 0.287 %Si, $44.53, spread=44
- 11 [28,50,22,] 99.350 %Al, 0.126 %Fe, 0.329 %Si, $44.53, spread=28
- 12 [51,9,36,] 99.517 %Al, 0.070 %Fe, 0.264 %Si, $48.71, spread=42
- 13 [27,25,4,] 99.350 %Al, 0.253 %Fe, 0.204 %Si, $44.53, spread=23
- 14 [14,40,46,] 99.351 %Al, 0.173 %Fe, 0.232 %Si, $44.53, spread=32
- 15 [30,8,10,] 99.500 %Al, 0.167 %Fe, 0.227 %Si, $48.71, spread=22
- 16 [21,32,31,] 99.501 %Al, 0.089 %Fe, 0.201 %Si, $48.71, spread=11
- 17 [44,42,18,] 99.750 %Al, 0.044 %Fe, 0.136 %Si, $57.35, spread=26
- Sum = $790.73, MxSprd = 44                                                                                                                                                                                                                                                       
+ 1 [35 23 19 ] 99.356 %Al, 0.172 %Fe, 0.239 %Si, $44.53, spread = 16
+ 2 [ 5 49 26 ] 99.351 %Al, 0.188 %Fe, 0.316 %Si, $44.53, spread = 44
+ 3 [ 6 43  7 ] 99.350 %Al, 0.235 %Fe, 0.300 %Si, $44.53, spread = 37
+ 4 [24 33  1 ] 99.350 %Al, 0.056 %Fe, 0.283 %Si, $44.53, spread = 32
+ 5 [12 48 45 ] 99.352 %Al, 0.166 %Fe, 0.235 %Si, $44.53, spread = 36
+ 6 [13 39 37 ] 99.500 %Al, 0.154 %Fe, 0.170 %Si, $48.71, spread = 26
+ 7 [17 20 34 ] 99.351 %Al, 0.201 %Fe, 0.308 %Si, $44.53, spread = 17
+ 8 [29 38 41 ] 99.355 %Al, 0.154 %Fe, 0.261 %Si, $44.53, spread = 12
+ 9 [11  2 16 ] 99.500 %Al, 0.087 %Fe, 0.272 %Si, $48.71, spread = 14
+10 [47  3 15 ] 99.351 %Al, 0.172 %Fe, 0.287 %Si, $44.53, spread = 44
+11 [28 50 22 ] 99.350 %Al, 0.126 %Fe, 0.329 %Si, $44.53, spread = 28
+12 [51  9 36 ] 99.517 %Al, 0.070 %Fe, 0.264 %Si, $48.71, spread = 42
+13 [27 25  4 ] 99.350 %Al, 0.253 %Fe, 0.204 %Si, $44.53, spread = 23
+14 [14 40 46 ] 99.351 %Al, 0.173 %Fe, 0.232 %Si, $44.53, spread = 32
+15 [30  8 10 ] 99.500 %Al, 0.167 %Fe, 0.227 %Si, $48.71, spread = 22
+16 [21 32 31 ] 99.501 %Al, 0.089 %Fe, 0.201 %Si, $48.71, spread = 11
+17 [44 42 18 ] 99.750 %Al, 0.044 %Fe, 0.136 %Si, $57.35, spread = 26
+                                          Sum = $790.73, MxSprd = 44
 \end{verbatim}
 
 \subsection{Max Spread = 6}
