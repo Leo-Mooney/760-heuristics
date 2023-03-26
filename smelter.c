@@ -3,7 +3,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdbool.h>
-
+#include<string.h>
 
 
 double pots[51][3] = 
@@ -77,55 +77,79 @@ int min(const int a, const int b, const int c) {
 }
 
 double f(const int *crucible, const bool mod) {
-  double k = 20;
   double quality[3];
   double spread[3];
   for(int i=0;i<3;i++){
     quality[i] = (pots[crucible[0]][i] + pots[crucible[1]][i] + pots[crucible[2]][i])/3;
-    double al = pots[crucible[0]][i];
-    double fe = pots[crucible[1]][i];
-    double si = pots[crucible[2]][i];
-    double max = (al > fe) ? ((al > si) ? al : si) : ((fe > si) ? fe : si);
-    double min = (al < fe) ? ((al < si) ? al : si) : ((fe < si) ? fe : si);
-    spread[i] = max - min;
   }
-
-  double tol = 0.00001;
-  double a = 0;
-  double b = 0;
-  double c = 0;
-  int al = -1;
-  int fe = -1;
-  int si = -1;
-  
+  double tol = 0.000001;
   for(int i=10;i>=0;i--){
     if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) { 
-      if(quality[0] >= grade_min_Al[i] - tol && al != -1){
-        al = i;
+      return grade_value[i];
+    } 
+  }  
+  return 0;
+}
+
+double calc_quad(const double p, const double q, const double r) {
+    return pow(p - r, 2.0) / pow(q - r, 2.0);
+}
+
+double f_mod(const int *crucible){
+  double quality[3];
+  for(int i=0;i<3;i++){
+    quality[i] = (pots[crucible[0]][i] + pots[crucible[1]][i] + pots[crucible[2]][i])/3;
+  }
+  double tol = 0.000001;
+  for(int i=10;i>=0;i--){
+    if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) { 
+      double quad = 0;
+      if(i!=10 && !(quality[0] >= grade_min_Al[i+1]-tol)){
+        quad = calc_quad(quality[0], grade_min_Al[i+1], grade_min_Al[i]);
       }
-      if(quality[1] <= grade_max_Fe[i] + tol && fe != -1){
-        fe = i;
+      else if(i!=10 && !(quality[1] <= grade_max_Fe[i+1] + tol)){
+        quad = calc_quad(quality[1], grade_max_Fe[i+1], grade_max_Fe[i]);
       }
-      if(quality[2] <= grade_max_Si[i] + tol && si != -1){
-        si = i;
+      else if(i!=10 && !(quality[2] <= grade_max_Si[i+1] + tol)){
+        quad = calc_quad(quality[2], grade_max_Si[i+1], grade_max_Si[i]);
       }
-      if(mod){
-           // return grade_value[i] - (2*spread[0] + 2*spread[1] + 2*spread[2]);
-        double max = (al > fe) ? ((al > si) ? al : si) : ((fe > si) ? fe : si);
-        double min = (al < fe) ? ((al < si) ? al : si) : ((fe < si) ? fe : si);
-        return grade_value[i] - 5*(max-min);
-        // return grade_value[i] - k*(quality[0] - grade_min_Al[i]) - k*(grade_max_Fe[i] - quality[1]) - k*(grade_max_Si[i] - quality[2]);
+      
+
+      return grade_value[i] + quad;
+    } 
+  }  
+  return 0;
+}
+
+double f_mod_spread(const int *crucible, const int max_spread){
+  double quality[3];
+  for(int i=0;i<3;i++){
+    quality[i] = (pots[crucible[0]][i] + pots[crucible[1]][i] + pots[crucible[2]][i])/3;
+  }
+  double tol = 0.000001;
+  int spread = max(crucible[0], crucible[1], crucible[2]) - min(crucible[0], crucible[1], crucible[2]);
+  double spread_penalty = (spread > max_spread) ? -10*(spread-max_spread) : 0;
+  for(int i=10;i>=0;i--){
+    if(quality[0] >= grade_min_Al[i]-tol && quality[1] <= grade_max_Fe[i] + tol && quality[2] <= grade_max_Si[i] + tol) { 
+      double quad = 0;
+      if(i!=10 && !(quality[0] >= grade_min_Al[i+1]-tol)){
+        quad = calc_quad(quality[0], grade_min_Al[i+1], grade_min_Al[i]);
       }
-      else {
-        return grade_value[i];
+      else if(i!=10 && !(quality[1] <= grade_max_Fe[i+1] + tol)){
+        quad = calc_quad(quality[1], grade_max_Fe[i+1], grade_max_Fe[i]);
       }
+      else if(i!=10 && !(quality[2] <= grade_max_Si[i+1] + tol)){
+        quad = calc_quad(quality[2], grade_max_Si[i+1], grade_max_Si[i]);
+      }
+      
+
+      return grade_value[i] + quad + spread_penalty;
     } 
   }  
   return 0;
 }
 
 double f_spread(const int *crucible, const int max_spread) {
-  double k = 20;
   double quality[3];
   for(int i=0;i<3;i++){
     quality[i] = (pots[crucible[0]][i] + pots[crucible[1]][i] + pots[crucible[2]][i])/3;
@@ -159,6 +183,7 @@ double calc_obj_spread(const int x[17][3], const int max_spread) {
 
 void print_sol(const int x[17][3]) {
   int MxSprd = 0;
+  printf("\n");
   for(int i=0;i<17;i++){
     printf(" %d [", i+1);
     for(int j=0;j<3;j++){
@@ -172,7 +197,7 @@ void print_sol(const int x[17][3]) {
     printf("] %.3f %%Al, %.3f %%Fe, %.3f %%Si, $%.2f, spread=%d", al, fe, si, f(x[i], false), spread);
     printf("\n");
   }
-  printf("Sum = $%.3f, MxSprd = %d", calc_obj(x), MxSprd);
+  printf("Sum = $%.3f", calc_obj(x));
 }
 
 void print_sol_spread(const int x[17][3], const int max_spread) {
@@ -196,7 +221,7 @@ void print_sol_spread(const int x[17][3], const int max_spread) {
 void next_ascent(int x[17][3]){
   double last_crucible_values[17];
   for(int i=0;i<17;i++){
-    last_crucible_values[i] = f(x[i], true);
+    last_crucible_values[i] = f_mod(x[i]);
   }
   int o_k = -1;
   int o_l = -1;
@@ -215,8 +240,54 @@ void next_ascent(int x[17][3]){
             x[k][m] = x[l][n];
             x[l][n] = swap;
             
-            double f_k = f(x[k], true);
-            double f_l = f(x[l], true);
+            double f_k = f_mod(x[k]);
+            double f_l = f_mod(x[l]);
+
+            double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
+            if(delta>0.001){
+              last_crucible_values[k] = f_k;
+              last_crucible_values[l] = f_l;
+              o_k = k;
+              o_m = m;
+              o_l = l;
+              o_n = n;
+            }
+            else{
+              x[l][n] = x[k][m];
+              x[k][m] = swap;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+void next_ascent_spread(int x[17][3], const int max_spread){
+  double last_crucible_values[17];
+  for(int i=0;i<17;i++){
+    last_crucible_values[i] = f_mod_spread(x[i], max_spread);
+  }
+  int o_k = -1;
+  int o_l = -1;
+  int o_m = -1;
+  int o_n = -1;
+
+  while(1){
+    for(int k=0;k<16;k++){
+      for(int m=0;m<3;m++){
+        for(int l=k+1;l<17;l++){
+          for(int n=0;n<3;n++){
+            if(k==o_k && m==o_m && l==o_l && n==o_n){
+              return;
+            }
+            double swap = x[k][m];
+            x[k][m] = x[l][n];
+            x[l][n] = swap;
+            
+            double f_k = f_mod_spread(x[k], max_spread);
+            double f_l = f_mod_spread(x[l], max_spread);
 
             double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
             if(delta>0.001){
@@ -248,7 +319,7 @@ void simulated_annealing(int x[17][3], double c1, double alpha, int ck_update_ra
 
   double last_crucible_values[17];
   for(int i=0;i<17;i++){
-    last_crucible_values[i] = f(x[i], true);
+    last_crucible_values[i] = f_mod(x[i]);
   }
   srand(rand());
   while(ck>0.0000000001){
@@ -264,8 +335,8 @@ void simulated_annealing(int x[17][3], double c1, double alpha, int ck_update_ra
     x[k][m] = x[l][n];
     x[l][n] = swap;
     
-    double f_k = f(x[k], true);
-    double f_l = f(x[l], true);
+    double f_k = f_mod(x[k]);
+    double f_l = f_mod(x[l]);
 
     double delta = f_k + f_l - last_crucible_values[k] - last_crucible_values[l];
     if(delta>0.0001){
@@ -397,10 +468,27 @@ int main() {
   srand(time(NULL));
   int x[17][3];
 
-  int max_spread = 8;
+  // int max_spread = 6;
+  // double best_obj = 0;
+  // int best_x[17][3];
+  // for(int i=0;i<500000; i++){
+  //   generate_random_x(x);
+  //   next_ascent_spread(x, max_spread);
+  //   double obj = calc_obj_spread(x, max_spread);
+  //   if(obj > best_obj){
+  //     best_obj = obj > best_obj ? obj : best_obj;
+  //     memcpy(best_x, x, sizeof(best_x));
+  //   }
+  //   if(i%1000==0){
+  //     printf("%f\n", best_obj);
+  //   }
+  // }
+  // print_sol_spread(best_x, max_spread);
+  // printf("%f", best_obj);
   generate_random_x(x);
-  simulated_annealing_spread(x, 100, 0.999999999, 1, max_spread);
-  print_sol_spread(x, max_spread);
+  simulated_annealing(x, 100, 0.99999999, 1);
+  // simulated_annealing_spread(x, 100, 0.999999999, 1, max_spread);
+  print_sol(x);
   return 0;
 }
 
