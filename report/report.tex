@@ -47,11 +47,11 @@ $\overline{Si}[x_{c,avg}] = \displaystyle\frac{Si[x_{c,1}], Si[x_{c,2}], Si[x_{c
   \STATE $I_i := h(x_i) \forall i \in c$ 
   \WHILE {not stopped}
     \STATE Compare each neighbor $y(x, k, l, m, n) \in  N(x)$
-    \STATE Let $d = h(y_k) + h(y_k) - I_k - I_l$
+    \STATE Let $d = h(y_k) + h(y_l) - I_k - I_l$
     \IF {$d > 0$ for some $y \in N(x)$}
       \STATE x := y
       \STATE $I_k := h(y_k)$ 
-      \STATE $I_l := h(y_k)$ 
+      \STATE $I_l := h(y_l)$ 
     \ELSIF {$d \le 0 \forall y \in N(x)$}
       \STATE Stop
     \ENDIF
@@ -121,81 +121,54 @@ plateus because the objective function is not continuous. This means
 there will be lots of cases where two pots are swapped and the
 quality, and thus value, will remain constant.\\\\
 
-\noindent (b) One function that could add a slope to plateus is to 
-give a slightly higher objective value when the means of the elements in the pot
-are further away from their worst quality. The maximum distance from the
-worst quality should be the best quality, as there should be no incentive
-to improve on a quality that results in the highest grade. The gradient 
-at which a higher objective value is given should be lower for
-aluminium than iron or silicon as the distance between the worst mean
-quality for aluminium is greater than that of the other two. This can 
-be described by the following definition.
-\[
-  g'(\overline{Al},\overline{Fe},\overline{Si}) = 
-  g(\overline{Al},\overline{Fe},\overline{Si}) + a(\overline{Al}) +
-  b(\overline{Fe}) + c(\overline{Si})
-\]
-Where
-\[
-  a(\overline{Al}) = 
-  \begin{cases}
-    0.1*(\overline{Al} - 99.1) & \text{if } \overline{Al} \le 99.9)\\
-    0 & \text{otherwise}
-  \end{cases}
-\]
-\[
-  b(\overline{Fe}) = 
-  \begin{cases}
-    0.09 - \overline{Fe} & \text{if } \overline{Fe} \ge 0.03)\\
-    0 & \text{otherwise}
-  \end{cases}
-\]
-\[
-  c(\overline{Si}) = 
-  \begin{cases}
-    0.09 - \overline{Si} & \text{if } \overline{Si} \ge 0.01)\\
-    0 & \text{otherwise}
-  \end{cases}
-\]
-Consider a crucible with the properties. Note the specific properties
-of these pots are not consistent with those provided as it is just an
-example of a possible configuration.
+\noindent (b) The best outcome is when the crucible is just above
+the min/max requirements to enter the grade boundary. This is because
+when sitting too far above the grade boundary there are wasted
+resources (i.e. the quality doesn't need to be that good).
+The proposed function will add a non-linear gradient to the existing
+value function to encourage sitting on the grade boundary. This 
+non-linear gradient will take the form of a quadratic with a local
+minimum at the current grade boundary. The maximum value this
+quadratic will take will be 1 and the minimum 0. This can be formally
+defined as follows
 
-\begin{table}
-\centering
-\begin{tabular}{ |c|c|c|c| }
-  \hline
-  Pot Number & Al & Fe & Si\\
-  \hline
-  1 & 99.23 & 0.063 & 0.054\\
-  \hline
-  2 & 99.23 & 0.063 & 0.054\\
-  \hline
-  3 & 99.23 & 0.063 & 0.054\\
-  \hline
-  Average Quality & 3 & 3 & 3\\
-  \hline
-\end{tabular}
-  \label{tab:Crucible from x}
-\end{table}
+\[
+  g'(\overline{Al}, \overline{Fe}, \overline{Si}) = 
+  g(\overline{Al}, \overline{Fe}, \overline{Si})
+  + \displaystyle\frac{(p-r)^2}{(q-r)^2}
+\]
 
-\begin{table}
-\centering
-\begin{tabular}{ |c|c|c|c| }
-  \hline
-  Pot Number & Al & Fe & Si\\
-  \hline
-  1 & 99.23 & 0.063 & 0.054\\
-  \hline
-  2 & 99.23 & 0.063 & 0.054\\
-  \hline
-  3 & 99.23 & 0.063 & 0.054\\
-  \hline
-  Average Quality & 3 & 3 & 3\\
-  \hline
-\end{tabular}
-  \label{tab:Crucible from y}
-\end{table}
+Where\\
+$p$ is which of $\overline{Al}, \overline{Fe}, \overline{Si}$ is
+closest to the current grade min/max requirement.\\
+$r$ is the current grade min/max requirement for $p$.\\
+$q$ is the next highest grade min/max requirement for $p$.\\
+
+The effect this will have is that there will be a gradient encouraging
+neighbors to be closer to the next grade boundary. Furthermore,
+neighbors that are already closer to the next grade boundary will be
+further encouraged than those who are far away from the next grade 
+boundary. \\
+
+Let us consider a simplified example where the crucible only has one 
+property, $Al$. If $Al > 95$ then the value is $10. If $A > 97$ then the
+value is $20. Now let us consider solution x with two crucibles 
+$x_k, x_l$, and a neighbor y with two crucibles $y_k, y_l$. \\
+$Al[x_{k,1}]=95.3,Al[x_{k,2}]=95.2,Al[x_{k,3}]=96.5,\overline{Al}[k]=95.67$\\
+$Al[x_{l,1}]=96.8,Al[x_{l,2}]=96.9,Al[x_{l,3}]=95.4\overline{Al}[k]=96.37$\\
+
+$Al[y_{k,1}]=95.3,Al[y_{k,2}]=95.2,Al[y_{k,3}]=95.4,\overline{Al}[k]=95.30$\\
+$Al[y_{l,1}]=96.8,Al[y_{l,2}]=96.9,Al[y_{l,3}]=96.5\overline{Al}[k]=96.73$\\
+
+In this example using the original grading function there would be no
+difference between the objective value for $x$ and $y$ so the neighbor
+would not be accepted in standard next/steepest ascent. However, 
+accepting the new solution would likely allow a better solution to be 
+found, as crucible $l$ is closer to the $97 boundary while $l$ while
+$k$ is closer to the 
+
+
+
 
 
 
