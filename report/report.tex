@@ -32,6 +32,11 @@ y_{2, 1}y_{2, 2}y_{2, 3};...y_{c, j}),y_{c,j}=
 
 \clearpage
 \section{Question 2}
+The intermediate values for each crucible will be the value of function
+$g()$ of that crucible. The intermediate values will only store the
+values of the crucibles in the current configuration $x$, and will be 
+updated when $x$ is updated.\\
+
 Let $h(x_c) = g(\overline{Al}[x_{c,avg}], \overline{Fe}[x_{c,avg}], \overline{Si}[x_{c, avg}])$ where \\\\
 $\overline{Al}[x_{c,avg}] = \displaystyle\frac{Al[x_{c,1}], Al[x_{c,2}], Al[x_{c,3}]}{3}$\\\\
 $\overline{Fe}[x_{c,avg}] = \displaystyle\frac{Fe[x_{c,1}], Fe[x_{c,2}], Fe[x_{c,3}]}{3}$\\\\
@@ -116,12 +121,15 @@ ascent is better than steepest ascent; however, this conclusion is from
 limited information so it not conclusive evidence.
 
 \section{Question 5}
-(a) You would expect the problem's objective function to have lots of 
+You would expect the problem's objective function to have lots of 
 plateus because the objective function is not continuous. This means
-there will be lots of cases where two pots are swapped and the
-quality, and thus value, will remain constant.\\\\
+there will be lots of cases where two pots of similar quality are 
+swapped and the grade, and thus value, will remain constant. It will 
+also be common that two pots of different qualities will swap, causing 
+their grades to also swap. In this case the value will also remain
+constant.\\\\
 
-\noindent (b) The best outcome is when the crucible is just above
+The best outcome is when the crucible is just above
 the min/max requirements to enter the grade boundary. This is because
 when sitting too far above the grade boundary there are wasted
 resources (i.e. the quality doesn't need to be that good).
@@ -151,9 +159,10 @@ further encouraged than those who are far away from the next grade
 boundary. \\
 
 Let us consider a simplified example where the crucible only has one 
-property, $Al$. If $Al > 95$ then the value is \$10. If $Al > 97$ then the
-value is \$20. Now let us consider solution x with two crucibles 
-$x_k, x_l$, and a neighbor y with two crucibles $y_k, y_l$. \\
+relevant property, $Al$. This means that Si and Fe means are already 
+the minimum then can be. If $Al > 95$ then the value is \$10. If 
+$Al > 97$ then the value is \$20. Now let us consider solution x with 
+two crucibles $x_k, x_l$, and a neighbor y with two crucibles $y_k, y_l$. \\
 $Al[x_{k,1}]=95.3,Al[x_{k,2}]=95.2,Al[x_{k,3}]=96.5,\overline{Al}[x_k]=95.67$\\
 $Al[x_{l,1}]=96.8,Al[x_{l,2}]=96.9,Al[x_{l,3}]=95.4,\overline{Al}[x_l]=96.37$\\
 $Al[y_{k,1}]=95.3,Al[y_{k,2}]=95.2,Al[y_{k,3}]=95.4,\overline{Al}[y_k]=95.30$\\
@@ -166,7 +175,8 @@ accepting the new solution would likely allow a better solution to be
 found, as crucible $l$ is closer to the \$97 boundary while
 $k$ is closer to the \$95 boundary, which it will not drop below without
 good reason due to the sharp change in grading function $g()$ at this
-boundary.\\
+boundary. On a next iteration it will be easier for pot $l$ to exceed
+the grade boundary giving it a higher value if this swap is made.\\
 
 Using the modified $g'()$ The crucible values are as follows\\
 $x_k = \$10.112225$ 
@@ -175,11 +185,11 @@ $y_k = \$10.022500$
 $y_l = \$10.748225$ \\
 This results in a change of objective value of 0.189275, meaning the
 better solution will be accepted. The greatest magnitude this gradient
-value can take is 1, as it is stil desirable to have a steep gradient
-change when changing grades. \\
+value can take is 1, as it is stil desirable to maintain a steep 
+gradient when changing grades. \\
 
 \textit{Note: This new objective function with next ascent ended up
-working better than simulated annealing and was used for find my best
+working better than simulated annealing and was used to find my best
 solutions.}
 
 \section{Question 6}
@@ -263,9 +273,10 @@ See Appendix A for code.
 
 \section{My Best Solutions}
 These were found by using my modified objective function from Q5 in C
-with next ascent. This gave slightly better results than simulated
-annealing in C. I am happy to provide the code if required for the 
-competition, just email me.
+with next ascent. These solutions took around 1500 iterations to
+converge upon with my updated objective function. This gave slightly 
+better results than simulated annealing in C. I am happy to provide the
+code if required for the competition, just email me.
 
 \subsection{No Max Spread}
 \begin{verbatim}
@@ -360,6 +371,7 @@ See overleaf
 \includepdf[landscape=true,pages=-]{./assets/steepest_ascent_chart.pdf}
 \includepdf[landscape=true,pages=-]{./assets/repeated_next_ascents_chart.pdf}
 \includepdf[landscape=true,pages=-]{./assets/repeated_steepest_ascents_chart.pdf}
+\includepdf[landscape=true,pages=-]{./assets/code.pdf}
 
 
 \end{document}
