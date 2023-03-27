@@ -23,7 +23,7 @@ $N(\mathbf{x}) = \{\mathbf{y}(\mathbf{x}, k, l, m, n), k=1,2,3,...,16,
 l=k+1,k+2,k+3,...17, m=1,2,3, n=1,2,3\}$ where
 
 $$\mathbf{y}(\mathbf{x},k,l,m,n)=(y_{1, 1},y_{1, 2},y_{1, 3};
-y_{2, 1}y_{2, 2}y_{2, 3};...y_{c, j}),y_{c,j}=
+y_{2, 1},y_{2, 2},y_{2, 3};...y_{17, 3}),y_{c,j}=
 \begin{cases}
     x_{l, n} & \text{if } c=k,j=m \\
     x_{k, m} & \text{if } c=l,j=n \\
@@ -38,9 +38,9 @@ values of the crucibles in the current configuration $x$, and will be
 updated when $x$ is updated.\\
 
 Let $h(x_c) = g(\overline{Al}[x_{c,avg}], \overline{Fe}[x_{c,avg}], \overline{Si}[x_{c, avg}])$ where \\\\
-$\overline{Al}[x_{c,avg}] = \displaystyle\frac{Al[x_{c,1}], Al[x_{c,2}], Al[x_{c,3}]}{3}$\\\\
-$\overline{Fe}[x_{c,avg}] = \displaystyle\frac{Fe[x_{c,1}], Fe[x_{c,2}], Fe[x_{c,3}]}{3}$\\\\
-$\overline{Si}[x_{c,avg}] = \displaystyle\frac{Si[x_{c,1}], Si[x_{c,2}], Si[x_{c,3}]}{3}$
+$\overline{Al}[x_{c,avg}] = \displaystyle\frac{Al[x_{c,1}]+Al[x_{c,2}]+Al[x_{c,3}]}{3}$\\\\
+$\overline{Fe}[x_{c,avg}] = \displaystyle\frac{Fe[x_{c,1}]+Fe[x_{c,2}]+Fe[x_{c,3}]}{3}$\\\\
+$\overline{Si}[x_{c,avg}] = \displaystyle\frac{Si[x_{c,1}]+Si[x_{c,2}]+Si[x_{c,3}]}{3}$
 
 \begin{algorithm}
 \caption{Sweep x}
@@ -51,15 +51,23 @@ $\overline{Si}[x_{c,avg}] = \displaystyle\frac{Si[x_{c,1}], Si[x_{c,2}], Si[x_{c
   \STATE Let $I$ be the intermediate values\\
   \STATE $I_i := h(x_i) \forall i \in c$ 
   \WHILE {not stopped}
-    \STATE Compare each neighbor $y(x, k, l, m, n) \in  N(x)$
-    \STATE Let $d = h(y_k) + h(y_l) - I_k - I_l$
-    \IF {$d > 0$ for some $y \in N(x)$}
+  \FOR {$k=1 \text{ to } 17$}
+  \FOR {$m=1 \text{ to } 3$}
+  \FOR {$l=k+1 \text{ to } 17$}
+  \FOR {$n=1 \text{ to } 3$}
+    \STATE $y = y(x, k, l, m, n)$
+    \STATE Let $\Delta = h(y_k) + h(y_l) - I_k - I_l$
+    \IF {$\Delta > 0$ }
       \STATE x := y
       \STATE $I_k := h(y_k)$ 
       \STATE $I_l := h(y_l)$ 
-    \ELSIF {$d \le 0 \forall y \in N(x)$}
+    \ELSIF {$\Delta \le 0 \forall y \in N(x)$}
       \STATE Stop
     \ENDIF
+  \ENDFOR
+  \ENDFOR
+  \ENDFOR
+  \ENDFOR
   \ENDWHILE
   \STATE $x^* := x$
 \end{algorithmic}
